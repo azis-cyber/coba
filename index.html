@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martabak Manis - Sistem Member</title>
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -91,9 +91,10 @@
 
     <script>
         // --- KONFIGURASI URL SCRIPT ---
+        // URL Menu sekarang mengarah ke URL Member
         const URL_SCRIPT_MEMBER = 'https://script.google.com/macros/s/AKfycbwxqv4GQ8NLzRdYm45fo9DBsolS1IN2kCgRsEVD-inwfCYd77BHA6qpZ1UR7tKhs2IueA/exec';
         const URL_SCRIPT_TRANSAKSI = 'https://script.google.com/macros/s/AKfycbynLjiBEVcShk35S2AN2Pl-F7hx_WV33Djb51Bxo1ShYPBxMYJhGUIaTSN1OEncUAoB/exec';
-        const URL_SCRIPT_MENU = 'https://script.google.com/macros/s/AKfycbxtcWkT75gS0Nai1loJVHqUGwWidbKPzQK1FS036_fHFUpmX8l41YmjD437oa0-PTqU/exec';
+        const URL_SCRIPT_MENU = 'https://script.google.com/macros/s/AKfycbwxqv4GQ8NLzRdYm45fo9DBsolS1IN2kCgRsEVD-inwfCYd77BHA6qpZ1UR7tKhs2IueA/exec'; // SUDAH DIPERBAIKI
         const URL_SCRIPT_VOUCHER = 'https://script.google.com/macros/s/AKfycbwp_7iZ8OQ28r9h57LGYoTEiZK_fNT2Xys4Eot5kMLdSiert4TzNR8zsLqlqvRiBunY/exec';
 
         // --- STATE MANAJEMEN ---
@@ -311,7 +312,8 @@
 
         // --- FUNGSI PEMBANTU ---
         async function loadMenu() {
-            const res = await callAPI('getMenu', {}, 'menu');
+            // Panggil API ke endpoint 'member' karena logikanya sudah pindah ke sana
+            const res = await callAPI('getMenu', {}, 'member'); 
             if (res.status === 'success') { state.menu = res.data; if (state.page === 'menu') showPage('menu'); }
         }
 
