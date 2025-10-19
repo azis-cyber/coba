@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Martabak Manis - Sistem Member Premium</title>
+    <title>Martabak Manis - Sistem Member</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,9 +19,6 @@
     
     <!-- QR Scanner -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         :root {
@@ -784,6 +781,39 @@
             background: var(--gold-light);
         }
         
+        .debug-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 9999;
+            display: none;
+        }
+        
+        .debug-panel.show {
+            display: block;
+        }
+        
+        .debug-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+        
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -830,6 +860,10 @@
         <i class="material-icons">menu</i>
     </button>
     
+    <!-- Debug Panel -->
+    <button class="debug-toggle" id="debugToggle">Debug</button>
+    <div class="debug-panel" id="debugPanel"></div>
+    
     <!-- Notification -->
     <div class="notification" id="notification">
         <i class="material-icons" id="notificationIcon">check_circle</i>
@@ -843,7 +877,7 @@
                 <i class="material-icons">restaurant</i>
                 Martabak Manis
             </div>
-            <p>Sistem Member Premium</p>
+            <p>Sistem Member</p>
         </div>
         
         <ul class="sidebar-menu">
@@ -1553,26 +1587,60 @@
         let selectedMember = null;
         let html5QrCode = null;
         
+        // Debug Mode
+        const DEBUG_MODE = true;
+        
         // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
             // Check if user is already logged in
             const savedUser = localStorage.getItem('currentUser');
             if (savedUser) {
-                const user = JSON.parse(savedUser);
-                currentUser = user;
-                isLoggedIn = true;
-                isAdmin = user.isAdmin || false;
-                updateNavigation();
-                if (isAdmin) {
-                    showPage('admin-dashboard');
-                } else {
-                    showPage('member-dashboard');
+                try {
+                    const user = JSON.parse(savedUser);
+                    currentUser = user;
+                    isLoggedIn = true;
+                    isAdmin = user.isAdmin || false;
+                    updateNavigation();
+                    if (isAdmin) {
+                        showPage('admin-dashboard');
+                    } else {
+                        showPage('member-dashboard');
+                    }
+                } catch (error) {
+                    logDebug('Error loading user from localStorage: ' + error);
                 }
             }
             
             // Setup event listeners
             setupEventListeners();
+            
+            // Setup debug panel
+            setupDebugPanel();
         });
+        
+        // Debug Functions
+        function setupDebugPanel() {
+            const debugToggle = document.getElementById('debugToggle');
+            const debugPanel = document.getElementById('debugPanel');
+            
+            if (debugToggle && debugPanel) {
+                debugToggle.addEventListener('click', function() {
+                    debugPanel.classList.toggle('show');
+                });
+            }
+        }
+        
+        function logDebug(message) {
+            if (DEBUG_MODE) {
+                const debugPanel = document.getElementById('debugPanel');
+                if (debugPanel) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    debugPanel.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+                    debugPanel.scrollTop = debugPanel.scrollHeight;
+                }
+                console.log(message);
+            }
+        }
         
         // Setup Event Listeners
         function setupEventListeners() {
@@ -1586,54 +1654,118 @@
             });
             
             // Mobile menu toggle
-            document.getElementById('mobileMenuToggle').addEventListener('click', function() {
-                document.getElementById('sidebar').classList.toggle('active');
-            });
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.classList.toggle('active');
+                    }
+                });
+            }
             
             // Logout
-            document.getElementById('logoutLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                logout();
-            });
+            const logoutLink = document.getElementById('logoutLink');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
             
             // Registration form
-            document.getElementById('registrationForm').addEventListener('submit', handleRegistration);
+            const registrationForm = document.getElementById('registrationForm');
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', handleRegistration);
+            }
             
             // Member login form
-            document.getElementById('memberLoginForm').addEventListener('submit', handleMemberLogin);
+            const memberLoginForm = document.getElementById('memberLoginForm');
+            if (memberLoginForm) {
+                memberLoginForm.addEventListener('submit', handleMemberLogin);
+            }
             
             // Admin login form
-            document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLogin);
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            if (adminLoginForm) {
+                adminLoginForm.addEventListener('submit', handleAdminLogin);
+            }
             
             // Forgot password
-            document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                window.open('https://wa.me/6283801928405?text=Halo%20Admin%20Martabak%20Manis,%20saya%20lupa%20kata%20sandi%20akun%20member%20saya.', '_blank');
-            });
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            if (forgotPasswordLink) {
+                forgotPasswordLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.open('https://wa.me/6283801928405?text=Halo%20Admin%20Martabak%20Manis,%20saya%20lupa%20kata%20sandi%20akun%20member%20saya.', '_blank');
+                });
+            }
             
             // Member dashboard
-            document.getElementById('showQRCodeBtn').addEventListener('click', showMemberQRCode);
-            document.getElementById('redeemPointsBtn').addEventListener('click', redeemPoints);
+            const showQRCodeBtn = document.getElementById('showQRCodeBtn');
+            if (showQRCodeBtn) {
+                showQRCodeBtn.addEventListener('click', showMemberQRCode);
+            }
+            
+            const redeemPointsBtn = document.getElementById('redeemPointsBtn');
+            if (redeemPointsBtn) {
+                redeemPointsBtn.addEventListener('click', redeemPoints);
+            }
             
             // Admin dashboard
-            document.getElementById('searchMemberBtn').addEventListener('click', searchMember);
-            document.getElementById('scanQRBtn').addEventListener('click', showQRScanner);
-            document.getElementById('transactionForm').addEventListener('submit', handleTransactionSubmit);
+            const searchMemberBtn = document.getElementById('searchMemberBtn');
+            if (searchMemberBtn) {
+                searchMemberBtn.addEventListener('click', searchMember);
+            }
+            
+            const scanQRBtn = document.getElementById('scanQRBtn');
+            if (scanQRBtn) {
+                scanQRBtn.addEventListener('click', showQRScanner);
+            }
+            
+            const transactionForm = document.getElementById('transactionForm');
+            if (transactionForm) {
+                transactionForm.addEventListener('submit', handleTransactionSubmit);
+            }
             
             // Transaction amount change
-            document.getElementById('transactionAmount').addEventListener('input', updateTransactionPoints);
+            const transactionAmount = document.getElementById('transactionAmount');
+            if (transactionAmount) {
+                transactionAmount.addEventListener('input', updateTransactionPoints);
+            }
             
             // Modal close buttons
-            document.getElementById('closeQRModal').addEventListener('click', closeQRModal);
-            document.getElementById('closeQRModal2').addEventListener('click', closeQRModal);
-            document.getElementById('downloadQRBtn').addEventListener('click', downloadQRCode);
+            const closeQRModal = document.getElementById('closeQRModal');
+            const closeQRModal2 = document.getElementById('closeQRModal2');
+            const downloadQRBtn = document.getElementById('downloadQRBtn');
             
-            document.getElementById('closeScannerModal').addEventListener('click', closeScannerModal);
-            document.getElementById('closeScannerModal2').addEventListener('click', closeScannerModal);
+            if (closeQRModal) {
+                closeQRModal.addEventListener('click', closeQRModal);
+            }
+            
+            if (closeQRModal2) {
+                closeQRModal2.addEventListener('click', closeQRModal);
+            }
+            
+            if (downloadQRBtn) {
+                downloadQRBtn.addEventListener('click', downloadQRCode);
+            }
+            
+            const closeScannerModal = document.getElementById('closeScannerModal');
+            const closeScannerModal2 = document.getElementById('closeScannerModal2');
+            
+            if (closeScannerModal) {
+                closeScannerModal.addEventListener('click', closeScannerModal);
+            }
+            
+            if (closeScannerModal2) {
+                closeScannerModal2.addEventListener('click', closeScannerModal);
+            }
         }
         
         // Page Navigation
         function showPage(pageId) {
+            logDebug(`Navigating to page: ${pageId}`);
+            
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
@@ -1650,7 +1782,10 @@
             updateNavigation();
             
             // Close mobile menu
-            document.getElementById('sidebar').classList.remove('active');
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.remove('active');
+            }
             
             // Load page-specific data
             if (pageId === 'member-dashboard' && currentUser) {
@@ -1700,16 +1835,18 @@
             const icon = document.getElementById('notificationIcon');
             const messageEl = document.getElementById('notificationMessage');
             
-            notification.className = `notification ${type}`;
-            icon.className = type === 'success' ? 'material-icons' : 'material-icons';
-            icon.textContent = type === 'success' ? 'check_circle' : 'error';
-            messageEl.textContent = message;
-            
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+            if (notification && icon && messageEl) {
+                notification.className = `notification ${type}`;
+                icon.className = type === 'success' ? 'material-icons' : 'material-icons';
+                icon.textContent = type === 'success' ? 'check_circle' : 'error';
+                messageEl.textContent = message;
+                
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
         }
         
         // Generate Member ID
@@ -1722,6 +1859,8 @@
         // Handle Registration
         async function handleRegistration(e) {
             e.preventDefault();
+            
+            logDebug('Registration form submitted');
             
             const formData = new FormData(e.target);
             const password = formData.get('password');
@@ -1738,8 +1877,10 @@
             }
             
             const btn = document.getElementById('registerBtn');
-            btn.disabled = true;
-            btn.textContent = 'Mendaftarkan...';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Mendaftarkan...';
+            }
             
             const memberData = {
                 namaLengkap: formData.get('namaLengkap'),
@@ -1749,6 +1890,8 @@
                 alamat: formData.get('alamat'),
                 password: password
             };
+            
+            logDebug('Member data:', memberData);
             
             try {
                 const response = await fetch(MEMBER_SCRIPT_URL, {
@@ -1762,7 +1905,10 @@
                     })
                 });
                 
+                logDebug('Registration response status:', response.status);
+                
                 const data = await response.json();
+                logDebug('Registration response data:', data);
                 
                 if (data.status === 'success') {
                     showNotification('Pendaftaran berhasil! QR Code telah dibuat.', 'success');
@@ -1772,11 +1918,13 @@
                     showNotification(data.message, 'error');
                 }
             } catch (error) {
+                logDebug('Registration error:', error);
                 showNotification('Terjadi kesalahan saat mendaftarkan member. Silakan coba lagi.', 'error');
-                console.error('Error:', error);
             } finally {
-                btn.disabled = false;
-                btn.textContent = 'Daftar Sekarang';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Daftar Sekarang';
+                }
             }
         }
         
@@ -1784,10 +1932,15 @@
         async function handleMemberLogin(e) {
             e.preventDefault();
             
+            logDebug('Member login form submitted');
+            
             const formData = new FormData(e.target);
             const btn = document.getElementById('loginMemberBtn');
-            btn.disabled = true;
-            btn.textContent = 'Memverifikasi...';
+            
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Memverifikasi...';
+            }
             
             try {
                 const response = await fetch(MEMBER_SCRIPT_URL, {
@@ -1802,7 +1955,10 @@
                     })
                 });
                 
+                logDebug('Member login response status:', response.status);
+                
                 const data = await response.json();
+                logDebug('Member login response data:', data);
                 
                 if (data.status === 'success') {
                     currentUser = data.member;
@@ -1816,11 +1972,13 @@
                     showNotification(data.message, 'error');
                 }
             } catch (error) {
+                logDebug('Member login error:', error);
                 showNotification('Terjadi kesalahan saat login. Silakan coba lagi.', 'error');
-                console.error('Error:', error);
             } finally {
-                btn.disabled = false;
-                btn.textContent = 'Login';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Login';
+                }
             }
         }
         
@@ -1828,10 +1986,15 @@
         async function handleAdminLogin(e) {
             e.preventDefault();
             
+            logDebug('Admin login form submitted');
+            
             const formData = new FormData(e.target);
             const btn = document.getElementById('loginAdminBtn');
-            btn.disabled = true;
-            btn.textContent = 'Memverifikasi...';
+            
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Memverifikasi...';
+            }
             
             try {
                 const response = await fetch(MEMBER_SCRIPT_URL, {
@@ -1846,7 +2009,10 @@
                     })
                 });
                 
+                logDebug('Admin login response status:', response.status);
+                
                 const data = await response.json();
+                logDebug('Admin login response data:', data);
                 
                 if (data.status === 'success') {
                     currentUser = data.admin;
@@ -1860,16 +2026,19 @@
                     showNotification(data.message, 'error');
                 }
             } catch (error) {
+                logDebug('Admin login error:', error);
                 showNotification('Terjadi kesalahan saat login. Silakan coba lagi.', 'error');
-                console.error('Error:', error);
             } finally {
-                btn.disabled = false;
-                btn.textContent = 'Login';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Login';
+                }
             }
         }
         
         // Logout
         function logout() {
+            logDebug('User logged out');
             currentUser = null;
             isLoggedIn = false;
             isAdmin = false;
@@ -1881,16 +2050,28 @@
         
         // Load Member Dashboard
         async function loadMemberDashboard() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                logDebug('No current user for member dashboard');
+                return;
+            }
+            
+            logDebug('Loading member dashboard for user:', currentUser.id);
             
             try {
                 // Update member info
-                document.getElementById('memberAvatar').textContent = currentUser.namaLengkap.charAt(0).toUpperCase();
-                document.getElementById('memberName').textContent = currentUser.namaLengkap;
-                document.getElementById('memberIdDisplay').textContent = currentUser.id;
-                document.getElementById('memberEmailDisplay').textContent = currentUser.email;
-                document.getElementById('memberPhoneDisplay').textContent = currentUser.telepon;
-                document.getElementById('memberJoinDateDisplay').textContent = currentUser.tanggalDaftar;
+                const memberAvatar = document.getElementById('memberAvatar');
+                const memberName = document.getElementById('memberName');
+                const memberIdDisplay = document.getElementById('memberIdDisplay');
+                const memberEmailDisplay = document.getElementById('memberEmailDisplay');
+                const memberPhoneDisplay = document.getElementById('memberPhoneDisplay');
+                const memberJoinDateDisplay = document.getElementById('memberJoinDateDisplay');
+                
+                if (memberAvatar) memberAvatar.textContent = currentUser.namaLengkap.charAt(0).toUpperCase();
+                if (memberName) memberName.textContent = currentUser.namaLengkap;
+                if (memberIdDisplay) memberIdDisplay.textContent = currentUser.id;
+                if (memberEmailDisplay) memberEmailDisplay.textContent = currentUser.email;
+                if (memberPhoneDisplay) memberPhoneDisplay.textContent = currentUser.telepon;
+                if (memberJoinDateDisplay) memberJoinDateDisplay.textContent = currentUser.tanggalDaftar;
                 
                 // Get updated member data
                 const response = await fetch(MEMBER_SCRIPT_URL, {
@@ -1905,24 +2086,32 @@
                 });
                 
                 const data = await response.json();
+                logDebug('Member data response:', data);
                 
                 if (data.status === 'success') {
                     const member = data.member;
-                    document.getElementById('memberPoints').textContent = member.points || 0;
+                    const memberPoints = document.getElementById('memberPoints');
+                    const pointsProgress = document.getElementById('pointsProgress');
+                    
+                    if (memberPoints) memberPoints.textContent = member.points || 0;
                     
                     const progressPercentage = (member.points / 300) * 100;
-                    document.getElementById('pointsProgress').style.width = `${progressPercentage}%`;
+                    if (pointsProgress) pointsProgress.style.width = `${progressPercentage}%`;
                     
                     // Load transactions
                     loadMemberTransactions();
                 }
             } catch (error) {
-                console.error('Error loading member dashboard:', error);
+                logDebug('Error loading member dashboard:', error);
             }
         }
         
         // Load Member Transactions
         async function loadMemberTransactions() {
+            if (!currentUser) return;
+            
+            logDebug('Loading transactions for member:', currentUser.id);
+            
             try {
                 const response = await fetch(TRANSACTION_SCRIPT_URL, {
                     method: 'POST',
@@ -1936,38 +2125,43 @@
                 });
                 
                 const data = await response.json();
+                logDebug('Transactions response:', data);
                 
                 if (data.status === 'success') {
                     const transactions = data.transactions;
                     const container = document.getElementById('transactionHistory');
                     
-                    if (transactions.length > 0) {
-                        let html = '';
-                        transactions.forEach(transaction => {
-                            html += `
-                                <div class="transaction-item">
-                                    <div class="transaction-info">
-                                        <h4>${transaction.product}</h4>
-                                        <p class="transaction-date">${transaction.date}</p>
+                    if (container) {
+                        if (transactions.length > 0) {
+                            let html = '';
+                            transactions.forEach(transaction => {
+                                html += `
+                                    <div class="transaction-item">
+                                        <div class="transaction-info">
+                                            <h4>${transaction.product}</h4>
+                                            <p class="transaction-date">${transaction.date}</p>
+                                        </div>
+                                        <div class="transaction-points">
+                                            ${transaction.points > 0 ? '+' : ''}${transaction.points} poin
+                                        </div>
                                     </div>
-                                    <div class="transaction-points">
-                                        ${transaction.points > 0 ? '+' : ''}${transaction.points} poin
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        container.innerHTML = html;
-                    } else {
-                        container.innerHTML = '<p class="text-center text-gray-500 py-8">Belum ada transaksi</p>';
+                                `;
+                            });
+                            container.innerHTML = html;
+                        } else {
+                            container.innerHTML = '<p class="text-center text-gray-500 py-8">Belum ada transaksi</p>';
+                        }
                     }
                 }
             } catch (error) {
-                console.error('Error loading transactions:', error);
+                logDebug('Error loading transactions:', error);
             }
         }
         
         // Load Admin Dashboard
         async function loadAdminDashboard() {
+            logDebug('Loading admin dashboard');
+            
             try {
                 // Get member stats
                 const memberResponse = await fetch(MEMBER_SCRIPT_URL, {
@@ -1981,9 +2175,11 @@
                 });
                 
                 const memberData = await memberResponse.json();
+                logDebug('Member stats response:', memberData);
                 
                 if (memberData.status === 'success') {
-                    document.getElementById('totalMembers').textContent = memberData.stats.totalMembers;
+                    const totalMembers = document.getElementById('totalMembers');
+                    if (totalMembers) totalMembers.textContent = memberData.stats.totalMembers;
                 }
                 
                 // Get transaction stats
@@ -1998,21 +2194,28 @@
                 });
                 
                 const transactionData = await transactionResponse.json();
+                logDebug('Transaction stats response:', transactionData);
                 
                 if (transactionData.status === 'success') {
-                    document.getElementById('totalTransactions').textContent = transactionData.stats.totalTransactions;
-                    document.getElementById('totalPointsIssued').textContent = transactionData.stats.totalPointsIssued;
+                    const totalTransactions = document.getElementById('totalTransactions');
+                    const totalPointsIssued = document.getElementById('totalPointsIssued');
+                    
+                    if (totalTransactions) totalTransactions.textContent = transactionData.stats.totalTransactions;
+                    if (totalPointsIssued) totalPointsIssued.textContent = transactionData.stats.totalPointsIssued;
                 }
                 
                 // Load members table
                 loadMembersTable();
-            } catch (error) {
-                console.error('Error loading admin dashboard:', error);
+            }
+        } catch (error) {
+                logDebug('Error loading admin dashboard:', error);
             }
         }
         
         // Load Members Table
         async function loadMembersTable() {
+            logDebug('Loading members table');
+            
             try {
                 const response = await fetch(MEMBER_SCRIPT_URL, {
                     method: 'POST',
@@ -2025,36 +2228,39 @@
                 });
                 
                 const data = await response.json();
+                logDebug('Members table response:', data);
                 
                 if (data.status === 'success') {
                     const members = data.members;
                     const tbody = document.getElementById('membersTable');
                     
-                    let html = '';
-                    members.forEach(member => {
-                        html += `
-                            <tr>
-                                <td>${member.id}</td>
-                                <td>${member.namaLengkap}</td>
-                                <td>${member.email}</td>
-                                <td>${member.telepon}</td>
-                                <td>${member.points}</td>
-                                <td>
-                                    <button
-                                        class="text-blue-500 hover:underline font-medium"
-                                        onclick="selectMember('${member.id}', '${member.namaLengkap}')"
-                                    >
-                                        Pilih
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                    
-                    tbody.innerHTML = html;
+                    if (tbody) {
+                        let html = '';
+                        members.forEach(member => {
+                            html += `
+                                <tr>
+                                    <td>${member.id}</td>
+                                    <td>${member.namaLengkap}</td>
+                                    <td>${member.email}</td>
+                                    <td>${member.telepon}</td>
+                                    <td>${member.points || 0}</td>
+                                    <td>
+                                        <button
+                                            class="text-blue-500 hover:underline font-medium"
+                                            onclick="selectMember('${member.id}', '${member.namaLengkap}')"
+                                        >
+                                            Pilih
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        tbody.innerHTML = html;
+                    }
                 }
             } catch (error) {
-                console.error('Error loading members table:', error);
+                logDebug('Error loading members table:', error);
             }
         }
         
@@ -2066,6 +2272,8 @@
                 showNotification('Masukkan ID atau nama member untuk mencari.', 'error');
                 return;
             }
+            
+            logDebug('Searching for member:', searchTerm);
             
             try {
                 const response = await fetch(MEMBER_SCRIPT_URL, {
@@ -2080,6 +2288,7 @@
                 });
                 
                 const data = await response.json();
+                logDebug('Search member response:', data);
                 
                 if (data.status === 'success' && data.members.length > 0) {
                     const member = data.members[0];
@@ -2088,58 +2297,66 @@
                     showNotification('Member tidak ditemukan.', 'error');
                 }
             } catch (error) {
+                logDebug('Error searching member:', error);
                 showNotification('Terjadi kesalahan saat mencari member. Silakan coba lagi.', 'error');
-                console.error('Error:', error);
             }
         }
         
         // Select Member
         function selectMember(memberId, memberName) {
+            logDebug('Selected member:', memberId, memberName);
+            
             selectedMember = { id: memberId, namaLengkap: memberName };
-            document.getElementById('transactionMemberId').value = memberId;
+            const transactionMemberId = document.getElementById('transactionMemberId');
+            if (transactionMemberId) transactionMemberId.value = memberId;
+            
             showNotification(`Member ${memberName} (${memberId}) telah dipilih.`, 'success');
             
             // Display selected member info
             const resultDiv = document.getElementById('memberSearchResult');
-            resultDiv.innerHTML = `
-                <div class="member-card">
-                    <div class="member-avatar">${memberName.charAt(0).toUpperCase()}</div>
-                    <div class="member-info">
-                        <h3>${memberName}</h3>
-                        <p>ID: ${memberId}</p>
+            if (resultDiv) {
+                resultDiv.innerHTML = `
+                    <div class="member-card">
+                        <div class="member-avatar">${memberName.charAt(0).toUpperCase()}</div>
+                        <div class="member-info">
+                            <h3>${memberName}</h3>
+                            <p>ID: ${memberId}</p>
+                        </div>
+                        <div class="member-points">
+                            <div class="member-points-value" id="selectedMemberPoints">-</div>
+                            <div class="member-points-label">Poin</div>
+                        </div>
                     </div>
-                    <div class="member-points">
-                        <div class="member-points-value" id="selectedMemberPoints">-</div>
-                        <div class="member-points-label">Poin</div>
-                    </div>
-                </div>
-            `;
-            
-            // Get member points
-            fetch(MEMBER_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    action: 'getMemberById',
-                    memberId: memberId
+                `;
+                
+                // Get member points
+                fetch(MEMBER_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'getMemberById',
+                        memberId: memberId
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.getElementById('selectedMemberPoints').textContent = data.member.points;
-                    selectedMember.points = data.member.points;
-                }
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const selectedMemberPoints = document.getElementById('selectedMemberPoints');
+                        if (selectedMemberPoints) selectedMemberPoints.textContent = data.member.points;
+                        selectedMember.points = data.member.points;
+                    }
+                });
+            }
         }
         
         // Update Transaction Points
         function updateTransactionPoints() {
             const amount = parseInt(document.getElementById('transactionAmount').value) || 1;
             const points = amount * 5;
-            document.getElementById('transactionPoints').value = points;
+            const transactionPoints = document.getElementById('transactionPoints');
+            if (transactionPoints) transactionPoints.value = points;
         }
         
         // Handle Transaction Submit
@@ -2161,6 +2378,8 @@
                 return;
             }
             
+            logDebug('Submitting transaction:', { memberId, product, amount, points });
+            
             try {
                 const response = await fetch(TRANSACTION_SCRIPT_URL, {
                     method: 'POST',
@@ -2179,15 +2398,25 @@
                 });
                 
                 const data = await response.json();
+                logDebug('Transaction response:', data);
                 
                 if (data.status === 'success') {
                     showNotification('Transaksi berhasil disimpan!', 'success');
                     
                     // Reset form
-                    document.getElementById('transactionForm').reset();
-                    document.getElementById('transactionMemberId').value = '';
-                    document.getElementById('transactionAmount').value = 1;
-                    document.getElementById('transactionPoints').value = 5;
+                    const transactionForm = document.getElementById('transactionForm');
+                    if (transactionForm) transactionForm.reset();
+                    
+                    const transactionMemberId = document.getElementById('transactionMemberId');
+                    const transactionProduct = document.getElementById('transactionProduct');
+                    const transactionAmount = document.getElementById('transactionAmount');
+                    const transactionPoints = document.getElementById('transactionPoints');
+                    
+                    if (transactionMemberId) transactionMemberId.value = '';
+                    if (transactionProduct) transactionProduct.value = '';
+                    if (transactionAmount) transactionAmount.value = 1;
+                    if (transactionPoints) transactionPoints.value = 5;
+                    
                     document.getElementById('memberSearchResult').innerHTML = '';
                     selectedMember = null;
                     
@@ -2197,18 +2426,19 @@
                     showNotification(data.message, 'error');
                 }
             } catch (error) {
+                logDebug('Error submitting transaction:', error);
                 showNotification('Terjadi kesalahan saat menyimpan transaksi. Silakan coba lagi.', 'error');
-                console.error('Error:', error);
             }
         }
         
         // Show QR Code
         function showQRCode(memberId) {
-            document.getElementById('qrMemberId').textContent = memberId;
+            const qrMemberId = document.getElementById('qrMemberId');
+            if (qrMemberId) qrMemberId.textContent = memberId;
             
             // Clear previous QR code
             const qrContainer = document.getElementById('qrcode');
-            qrContainer.innerHTML = '';
+            if (qrContainer) qrContainer.innerHTML = '';
             
             // Generate new QR code
             new QRCode(qrContainer, {
@@ -2220,7 +2450,8 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
             
-            document.getElementById('qrCodeModal').classList.add('show');
+            const modal = document.getElementById('qrCodeModal');
+            if (modal) modal.classList.add('show');
         }
         
         // Show Member QR Code
@@ -2232,7 +2463,8 @@
         
         // Close QR Modal
         function closeQRModal() {
-            document.getElementById('qrCodeModal').classList.remove('show');
+            const modal = document.getElementById('qrCodeModal');
+            if (modal) modal.classList.remove('show');
         }
         
         // Download QR Code
@@ -2248,7 +2480,8 @@
         
         // Show QR Scanner
         function showQRScanner() {
-            document.getElementById('qrScannerModal').classList.add('show');
+            const modal = document.getElementById('qrScannerModal');
+            if (modal) modal.classList.add('show');
             
             // Initialize QR scanner
             setTimeout(() => {
@@ -2262,13 +2495,17 @@
                     },
                     (decodedText, decodedResult) => {
                         // Stop scanning
-                        html5QrCode.stop().then(() => {
-                            html5QrCode = null;
-                        }).catch((err) => {
-                            console.error(`Unable to stop scanning: ${err}`);
-                        });
+                        if (html5QrCode) {
+                            html5QrCode.stop().then(() => {
+                                html5QrCode = null;
+                            }).catch((err) => {
+                                logDebug(`Unable to stop scanning: ${err}`);
+                            });
+                        }
                         
                         // Find member by ID
+                        logDebug('QR Code scanned:', decodedText);
+                        
                         fetch(MEMBER_SCRIPT_URL, {
                             method: 'POST',
                             headers: {
@@ -2281,6 +2518,8 @@
                         })
                         .then(response => response.json())
                         .then(data => {
+                            logDebug('Member found:', data);
+                            
                             if (data.status === 'success') {
                                 selectMember(data.member.id, data.member.namaLengkap);
                                 closeScannerModal();
@@ -2289,15 +2528,15 @@
                             }
                         })
                         .catch(error => {
+                            logDebug('Error finding member:', error);
                             showNotification('Terjadi kesalahan saat mencari member. Silakan coba lagi.', 'error');
-                            console.error('Error:', error);
                         });
                     },
                     (errorMessage) => {
                         // Parse error, ignore it
                     }
                 ).catch((err) => {
-                    console.error(`Unable to start scanning: ${err}`);
+                    logDebug(`Unable to start scanning: ${err}`);
                     showNotification('Tidak dapat memulai scanner. Pastikan kamera diizinkan.', 'error');
                 });
             }, 500);
@@ -2305,13 +2544,14 @@
         
         // Close Scanner Modal
         function closeScannerModal() {
-            document.getElementById('qrScannerModal').classList.remove('show');
+            const modal = document.getElementById('qrScannerModal');
+            if (modal) modal.classList.remove('show');
             
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
                     html5QrCode = null;
                 }).catch((err) => {
-                    console.error(`Unable to stop scanning: ${err}`);
+                    logDebug(`Unable to stop scanning: ${err}`);
                 });
             }
         }
@@ -2342,13 +2582,18 @@
                     });
                     
                     const data = await response.json();
+                    logDebug('Redeem points response:', data);
                     
                     if (data.status === 'success') {
                         // Update points display
                         const newPoints = data.newPoints;
-                        document.getElementById('memberPoints').textContent = newPoints;
+                        const memberPoints = document.getElementById('memberPoints');
+                        const pointsProgress = document.getElementById('pointsProgress');
+                        
+                        if (memberPoints) memberPoints.textContent = newPoints;
+                        
                         const progressPercentage = (newPoints / 300) * 100;
-                        document.getElementById('pointsProgress').style.width = `${progressPercentage}%`;
+                        if (pointsProgress) pointsProgress.style.width = `${progressPercentage}%`;
                         
                         // Add redeem transaction
                         await fetch(TRANSACTION_SCRIPT_URL, {
@@ -2371,11 +2616,42 @@
                         showNotification(data.message, 'error');
                     }
                 } catch (error) {
+                    logDebug('Error redeeming points:', error);
                     showNotification('Terjadi kesalahan saat menukar poin. Silakan coba lagi.', 'error');
-                    console.error('Error:', error);
                 }
             }
         }
+        
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            logDebug('App initialized');
+            
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    logDebug('Found saved user:', user);
+                    currentUser = user;
+                    isLoggedIn = true;
+                    isAdmin = user.isAdmin || false;
+                    updateNavigation();
+                    if (isAdmin) {
+                        showPage('admin-dashboard');
+                    } else {
+                        showPage('member-dashboard');
+                    }
+                } catch (error) {
+                    logDebug('Error loading saved user:', error);
+                }
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Setup debug panel
+            setupDebugPanel();
+        });
     </script>
 </body>
 </html>
