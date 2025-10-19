@@ -4,2654 +4,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martabak Manis - Sistem Member</title>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- QR Code -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    
-    <!-- QR Scanner -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    
     <style>
-        :root {
-            --primary: #d4af37;
-            --primary-dark: #b8941f;
-            --secondary: #8b4513;
-            --accent: #c9302c;
-            --dark: #1a1a1a;
-            --light: #f8f9fa;
-            --text: #333;
-            --text-light: #777;
-            --gold-light: #f9f4e8;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-            color: var(--text);
-            min-height: 100vh;
-        }
-        
-        .playfair {
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .gold-gradient {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        }
-        
-        .royal-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-        
-        .royal-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
-            border-color: rgba(212, 175, 55, 0.3);
-        }
-        
-        .gold-button {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .gold-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .gold-button:hover::before {
-            left: 100%;
-        }
-        
-        .gold-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.5);
-        }
-        
-        .gold-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 300px;
-            background: linear-gradient(180deg, var(--dark) 0%, #2a2a2a 100%);
-            color: white;
-            padding: 40px 25px;
-            z-index: 1000;
-            overflow-y: auto;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .sidebar-header {
-            text-align: center;
-            margin-bottom: 50px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar-logo {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            playfair: true;
-        }
-        
-        .sidebar-logo i {
-            margin-right: 15px;
-            font-size: 36px;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-        }
-        
-        .sidebar-menu li {
-            margin-bottom: 8px;
-        }
-        
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 18px 25px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
-            color: white;
-            transform: translateX(5px);
-        }
-        
-        .sidebar-menu a i {
-            margin-right: 18px;
-            font-size: 22px;
-        }
-        
-        .main-content {
-            margin-left: 300px;
-            padding: 40px;
-            min-height: 100vh;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-        
-        .header-title {
-            font-size: 42px;
-            font-weight: 700;
-            color: var(--dark);
-            playfair: true;
-            background: linear-gradient(135deg, var(--dark), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .header-user {
-            display: flex;
-            align-items: center;
-            background: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            margin-right: 15px;
-            font-size: 18px;
-        }
-        
-        .points-card {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border-radius: 25px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .points-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        .points-value {
-            font-size: 56px;
-            font-weight: 700;
-            margin: 20px 0;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        .points-progress {
-            background: rgba(255, 255, 255, 0.2);
-            height: 12px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 25px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .points-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #fff, rgba(255,255,255,0.8));
-            border-radius: 10px;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 18px 25px;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--text);
-            font-size: 15px;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 20px 30px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            transform: translateX(500px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 400px;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            border-left: 5px solid #4caf50;
-        }
-        
-        .notification.error {
-            border-left: 5px solid #f44336;
-        }
-        
-        .notification i {
-            margin-right: 15px;
-            font-size: 24px;
-        }
-        
-        .notification.success i {
-            color: #4caf50;
-        }
-        
-        .notification.error i {
-            color: #f44336;
-        }
-        
-        .mobile-menu-toggle {
-            display: none;
-            position: fixed;
-            top: 25px;
-            left: 25px;
-            z-index: 1001;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 12px;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-        
-        .stat-icon {
-            font-size: 42px;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 8px;
-        }
-        
-        .stat-label {
-            color: var(--text-light);
-            font-size: 15px;
-            font-weight: 500;
-        }
-        
-        .member-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-        
-        .member-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-        }
-        
-        .member-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 28px;
-            margin-right: 25px;
-            flex-shrink: 0;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-        
-        .member-info h3 {
-            font-size: 22px;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-        
-        .member-info p {
-            color: var(--text-light);
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        
-        .member-points {
-            margin-left: auto;
-            text-align: center;
-            padding-left: 25px;
-            border-left: 1px solid #eee;
-        }
-        
-        .member-points-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .member-points-label {
-            color: var(--text-light);
-            font-size: 13px;
-        }
-        
-        .transaction-item {
-            padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s ease;
-        }
-        
-        .transaction-item:hover {
-            background: var(--gold-light);
-        }
-        
-        .transaction-item:last-child {
-            border-bottom: none;
-        }
-        
-        .transaction-info h4 {
-            font-size: 18px;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-        
-        .transaction-date {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-        
-        .transaction-points {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
-            color: var(--primary);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 15px;
-        }
-        
-        .qr-container {
-            text-align: center;
-            padding: 30px;
-            background: var(--gold-light);
-            border-radius: 20px;
-            margin: 20px 0;
-        }
-        
-        .qr-container img {
-            max-width: 220px;
-            border: 8px solid white;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 25px;
-            width: 90%;
-            max-width: 550px;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: scale(0.7);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        }
-        
-        .modal.show .modal-content {
-            transform: scale(1);
-        }
-        
-        .modal-header {
-            padding: 30px;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(135deg, var(--gold-light), white);
-            border-radius: 25px 25px 0 0;
-        }
-        
-        .modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--dark);
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: all 0.3s ease;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-close:hover {
-            background: rgba(0, 0, 0, 0.05);
-            color: var(--dark);
-            transform: rotate(90deg);
-        }
-        
-        .modal-body {
-            padding: 30px;
-        }
-        
-        .modal-footer {
-            padding: 20px 30px;
-            border-top: 1px solid #f0f0f0;
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            background: var(--gold-light);
-            border-radius: 0 0 25px 25px;
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: var(--text);
-            border: 2px solid #e0e0e0;
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 15px;
-        }
-        
-        .btn-secondary:hover {
-            background: var(--light);
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-        
-        .scanner-container {
-            text-align: center;
-            padding: 30px;
-            background: var(--gold-light);
-            border-radius: 20px;
-            margin: 20px 0;
-        }
-        
-        #qr-reader {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        
-        .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 30px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-        
-        .product-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-        
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .product-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-        
-        .product-image::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
-        }
-        
-        .product-info {
-            padding: 25px;
-        }
-        
-        .product-name {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-        
-        .product-description {
-            color: var(--text-light);
-            font-size: 15px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .product-price {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .hidden {
-            display: none !important;
-        }
-        
-        .page {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .page.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .table-responsive {
-            overflow-x: auto;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-        }
-        
-        th {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 18px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 15px;
-        }
-        
-        th:first-child {
-            border-radius: 15px 0 0 0;
-        }
-        
-        th:last-child {
-            border-radius: 0 15px 0 0;
-        }
-        
-        td {
-            padding: 18px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 15px;
-        }
-        
-        tr:last-child td {
-            border-bottom: none;
-        }
-        
-        tr:hover {
-            background: var(--gold-light);
-        }
-        
-        .debug-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 12px;
-            max-width: 300px;
-            z-index: 9999;
-            display: none;
-        }
-        
-        .debug-panel.show {
-            display: block;
-        }
-        
-        .debug-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 15px;
-            font-size: 12px;
-            cursor: pointer;
-            z-index: 9999;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
-            
-            .header-title {
-                font-size: 32px;
-            }
-            
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 20px;
-            }
-        }
+        /* Gaya Kustom untuk Sentuhan Akhir */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Animasi Fade In */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .page-content { animation: fadeIn 0.6s ease-out; }
+
+        /* Gaya untuk QR Scanner */
+        #qr-reader { width: 100%; max-width: 500px; margin: auto; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);}
+        #qr-reader video { border-radius: 12px; }
+
+        /* Gaya Notifikasi */
+        .notification { position: fixed; top: 20px; right: 20px; padding: 16px 24px; border-radius: 12px; color: white; font-weight: 500; z-index: 1000; animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .notification.success { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .notification.error { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f97316, #ea580c); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #ea580c, #dc2626); }
+
+        /* Hover effect untuk card */
+        .hover-lift { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
     </style>
 </head>
-<body>
-    <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-toggle" id="mobileMenuToggle">
-        <i class="material-icons">menu</i>
-    </button>
-    
-    <!-- Debug Panel -->
-    <button class="debug-toggle" id="debugToggle">Debug</button>
-    <div class="debug-panel" id="debugPanel"></div>
-    
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <i class="material-icons" id="notificationIcon">check_circle</i>
-        <span id="notificationMessage">Notification message</span>
-    </div>
-    
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <i class="material-icons">restaurant</i>
-                Martabak Manis
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigasi -->
+        <aside id="sidebar" class="relative flex flex-col flex-shrink-0 w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+            <!-- Logo Area -->
+            <div class="flex items-center justify-center h-20 shadow-lg">
+                <h1 class="text-2xl font-bold tracking-wide">
+                    <i class="fas fa-pizza-slice text-orange-500 mr-2"></i> MartabakKu
+                </h1>
             </div>
-            <p>Sistem Member</p>
-        </div>
-        
-        <ul class="sidebar-menu">
-            <li>
-                <a href="#" class="nav-link active" data-page="beranda">
-                    <i class="material-icons">home</i>
-                    Beranda
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="#" data-page="beranda" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
+                    <i class="fas fa-home w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Beranda
                 </a>
-            </li>
-            <li class="nav-auth">
-                <a href="#" class="nav-link" data-page="daftar-member">
-                    <i class="material-icons">person_add</i>
-                    Daftar Member
+                <a href="#" data-page="menu" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
+                    <i class="fas fa-utensils w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Menu Kami
                 </a>
-            </li>
-            <li class="nav-auth">
-                <a href="#" class="nav-link" data-page="login-member">
-                    <i class="material-icons">login</i>
-                    Login Member
+                <a href="#" data-page="daftar" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
+                    <i class="fas fa-user-plus w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Daftar Member
                 </a>
-            </li>
-            <li class="nav-auth">
-                <a href="#" class="nav-link" data-page="login-admin">
-                    <i class="material-icons">admin_panel_settings</i>
-                    Login Admin
+                <a href="#" data-page="login" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
+                    <i class="fas fa-sign-in-alt w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Login Member
                 </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link" data-page="tentang-kami">
-                    <i class="material-icons">info</i>
-                    Tentang Kami
+                <a href="#" data-page="loginAdmin" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
+                    <i class="fas fa-user-shield w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Login Admin
                 </a>
-            </li>
-            <li class="nav-member hidden">
-                <a href="#" class="nav-link" data-page="member-dashboard">
-                    <i class="material-icons">dashboard</i>
-                    Dashboard Member
+                <a href="#" data-page="tentang" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
+                    <i class="fas fa-info-circle w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Tentang Kami
                 </a>
-            </li>
-            <li class="nav-admin hidden">
-                <a href="#" class="nav-link" data-page="admin-dashboard">
-                    <i class="material-icons">dashboard</i>
-                    Dashboard Admin
-                </a>
-            </li>
-            <li class="nav-logged-in hidden">
-                <a href="#" id="logoutLink">
-                    <i class="material-icons">logout</i>
-                    Logout
-                </a>
-            </li>
-        </ul>
-    </aside>
-    
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Beranda Page -->
-        <div id="beranda" class="page active">
-            <div class="header">
-                <h1 class="header-title">Selamat Datang di Martabak Manis</h1>
-            </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="px-6 py-4 flex justify-between items-center">
+                    <span class="text-gray-600">Selamat datang di sistem member MartabakKu</span>
+                    <span id="header-user-info" class="text-sm text-gray-500"></span>
+                </div>
+            </header>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="royal-card">
-                    <div class="p-10">
-                        <h2 class="text-3xl font-bold mb-6 playfair">Nikmati Keuntungan Menjadi Member</h2>
-                        <p class="mb-8 text-lg leading-relaxed">Bergabunglah dengan program member kami dan nikmati berbagai keuntungan eksklusif:</p>
-                        
-                        <ul class="space-y-4 mb-8">
-                            <li class="flex items-start">
-                                <i class="material-icons text-green-500 mr-3 text-xl">check_circle</i>
-                                <span class="text-lg">Dapatkan 5 poin untuk setiap pembelian</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="material-icons text-green-500 mr-3 text-xl">check_circle</i>
-                                <span class="text-lg">Tukarkan 300 poin untuk produk gratis</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="material-icons text-green-500 mr-3 text-xl">check_circle</i>
-                                <span class="text-lg">Dapatkan penawaran eksklusif untuk member</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="material-icons text-green-500 mr-3 text-xl">check_circle</i>
-                                <span class="text-lg">Akses ke dashboard pribadi untuk melihat poin Anda</span>
-                            </li>
-                        </ul>
-                        
-                        <div class="flex gap-4">
-                            <button class="gold-button" onclick="showPage('daftar-member')">
-                                Daftar Sekarang
-                            </button>
-                            <button class="btn-secondary" onclick="showPage('login-member')">
-                                Login Member
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="royal-card">
-                    <img
-                        src="https://picsum.photos/seed/martabak/600/400.jpg"
-                        alt="Martabak"
-                        class="w-full h-80 object-cover"
-                    />
-                    <div class="p-8">
-                        <h3 class="text-2xl font-bold mb-4 playfair">Martabak Manis Terenak di Kota</h3>
-                        <p class="text-lg leading-relaxed">Nikmati berbagai varian rasa martabak manis yang lezat dan menggugah selera. Dari cokelat, keju, hingga durian, semua ada di sini!</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mt-12">
-                <h2 class="text-3xl font-bold mb-8 playfair">Produk Unggulan Kami</h2>
-                <div class="product-grid">
-                    <div class="product-card">
-                        <div
-                            class="product-image"
-                            style={{ backgroundImage: 'url(https://picsum.photos/seed/martabak-coklat/400/300.jpg)' }}
-                        ></div>
-                        <div class="product-info">
-                            <h3 class="product-name">Martabak Coklat</h3>
-                            <p class="product-description">Perpaduan coklat premium dengan topping meses yang melimpah.</p>
-                            <p class="product-price">Rp 45.000</p>
-                        </div>
-                    </div>
-                    
-                    <div class="product-card">
-                        <div
-                            class="product-image"
-                            style={{ backgroundImage: 'url(https://picsum.photos/seed/martabak-keju/400/300.jpg)' }}
-                        ></div>
-                        <div class="product-info">
-                            <h3 class="product-name">Martabak Keju</h3>
-                            <p class="product-description">Keju leleh yang melimpah dengan sentuhan susu yang creamy.</p>
-                            <p class="product-price">Rp 50.000</p>
-                        </div>
-                    </div>
-                    
-                    <div class="product-card">
-                        <div
-                            class="product-image"
-                            style={{ backgroundImage: 'url(https://picsum.photos/seed/martabak-durian/400/300.jpg)' }}
-                        ></div>
-                        <div class="product-info">
-                            <h3 class="product-name">Martabak Durian</h3>
-                            <p class="product-description">Raja buah dengan rasa manis dan aromanya yang khas.</p>
-                            <p class="product-price">Rp 60.000</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Daftar Member Page -->
-        <div id="daftar-member" class="page">
-            <div class="header">
-                <h1 class="header-title">Daftar Member</h1>
-            </div>
-            
-            <div class="royal-card max-w-5xl mx-auto">
-                <div class="p-10">
-                    <h2 class="text-3xl font-bold mb-8 text-center playfair">Formulir Pendaftaran Member</h2>
-                    
-                    <form id="registrationForm">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="form-group">
-                                <label class="form-label">Nama Lengkap</label>
-                                <input
-                                    type="text"
-                                    name="namaLengkap"
-                                    class="form-input"
-                                    required
-                                />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Email</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    class="form-input"
-                                    required
-                                />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Nomor Telepon</label>
-                                <input
-                                    type="tel"
-                                    name="telepon"
-                                    class="form-input"
-                                    required
-                                />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Tanggal Lahir</label>
-                                <input
-                                    type="date"
-                                    name="tanggalLahir"
-                                    class="form-input"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Alamat</label>
-                            <textarea
-                                name="alamat"
-                                class="form-input"
-                                rows="4"
-                                required
-                            ></textarea>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="form-group">
-                                <label class="form-label">Kata Sandi</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    class="form-input"
-                                    required
-                                />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Konfirmasi Kata Sandi</label>
-                                <input
-                                    type="password"
-                                    name="konfirmasiPassword"
-                                    class="form-input"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    name="termsCheck"
-                                    class="mr-3 w-5 h-5"
-                                    required
-                                />
-                                <span>Saya menyetujui syarat dan ketentuan yang berlaku</span>
-                            </label>
-                        </div>
-                        
-                        <button
-                            type="submit"
-                            class="gold-button w-full"
-                            id="registerBtn"
-                        >
-                            Daftar Sekarang
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Login Member Page -->
-        <div id="login-member" class="page">
-            <div class="header">
-                <h1 class="header-title">Login Member</h1>
-            </div>
-            
-            <div class="royal-card max-w-md mx-auto">
-                <div class="p-10">
-                    <h2 class="text-3xl font-bold mb-8 text-center playfair">Login Member</h2>
-                    
-                    <form id="memberLoginForm">
-                        <div class="form-group">
-                            <label class="form-label">Email atau ID Member</label>
-                            <input
-                                type="text"
-                                name="email"
-                                class="form-input"
-                                required
-                            />
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Kata Sandi</label>
-                            <input
-                                type="password"
-                                name="password"
-                                class="form-input"
-                                required
-                            />
-                        </div>
-                        
-                        <div class="form-group text-right">
-                            <a
-                                href="#"
-                                id="forgotPasswordLink"
-                                class="text-blue-500 hover:underline font-medium"
-                            >
-                                Lupa Kata Sandi?
-                            </a>
-                        </div>
-                        
-                        <button
-                            type="submit"
-                            class="gold-button w-full"
-                            id="loginMemberBtn"
-                        >
-                            Login
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Login Admin Page -->
-        <div id="login-admin" class="page">
-            <div class="header">
-                <h1 class="header-title">Login Admin</h1>
-            </div>
-            
-            <div class="royal-card max-w-md mx-auto">
-                <div class="p-10">
-                    <h2 class="text-3xl font-bold mb-8 text-center playfair">Login Admin</h2>
-                    
-                    <form id="adminLoginForm">
-                        <div class="form-group">
-                            <label class="form-label">Username</label>
-                            <input
-                                type="text"
-                                name="username"
-                                class="form-input"
-                                required
-                            />
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Kata Sandi</label>
-                            <input
-                                type="password"
-                                name="password"
-                                class="form-input"
-                                required
-                            />
-                        </div>
-                        
-                        <button
-                            type="submit"
-                            class="gold-button w-full"
-                            id="loginAdminBtn"
-                        >
-                            Login
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Tentang Kami Page -->
-        <div id="tentang-kami" class="page">
-            <div class="header">
-                <h1 class="header-title">Tentang Kami</h1>
-            </div>
-            
-            <div class="royal-card max-w-5xl mx-auto">
-                <div class="p-10">
-                    <h2 class="text-3xl font-bold mb-6 playfair">Sejarah Martabak Manis</h2>
-                    <p class="mb-8 text-lg leading-relaxed">
-                        Martabak Manis adalah bisnis keluarga yang telah berdiri sejak tahun 1995. Kami memulai usaha ini dengan resep turun-temurun dari nenek kami, dan hingga kini kami tetap menjaga kualitas dan rasa autentik dari setiap martabak yang kami buat.
-                    </p>
-                    
-                    <h3 class="text-2xl font-bold mb-4 playfair">Visi & Misi</h3>
-                    <p class="mb-4 text-lg">
-                        <strong>Visi:</strong> Menjadi produsen martabak manis terbaik di Indonesia dengan kualitas terjamin dan pelayanan prima.
-                    </p>
-                    <p class="mb-8 text-lg">
-                        <strong>Misi:</strong> Memberikan pengalaman kuliner terbaik kepada pelanggan dengan menggunakan bahan-bahan berkualitas tinggi dan inovasi rasa yang terus berkembang.
-                    </p>
-                    
-                    <h3 class="text-2xl font-bold mb-4 playfair">Nilai-Nilai Kami</h3>
-                    <ul class="list-disc pl-6 mb-8 space-y-3 text-lg">
-                        <li><strong>Kualitas:</strong> Kami hanya menggunakan bahan-bahan terbaik untuk setiap produk kami.</li>
-                        <li><strong>Inovasi:</strong> Kami terus berinovasi dengan varian rasa baru untuk memuaskan selera pelanggan.</li>
-                        <li><strong>Pelayanan:</strong> Kepuasan pelanggan adalah prioritas utama kami.</li>
-                        <li><strong>Integritas:</strong> Kami beroperasi dengan jujur dan transparan dalam setiap aspek bisnis kami.</li>
-                    </ul>
-                    
-                    <h3 class="text-2xl font-bold mb-4 playfair">Tim Kami</h3>
-                    <p class="mb-8 text-lg">
-                        Tim kami terdiri dari para profesional yang berpengalaman dan bersemangat dalam menciptakan martabak manis terbaik. Dari dapur hingga pelayanan, setiap anggota tim berdedikasi untuk memberikan pengalaman terbaik kepada pelanggan.
-                    </p>
-                    
-                    <h3 class="text-2xl font-bold mb-4 playfair">Hubungi Kami</h3>
-                    <p class="mb-6 text-lg">
-                        Jika Anda memiliki pertanyaan atau ingin berkolaborasi dengan kami, jangan ragu untuk menghubungi kami:
-                    </p>
-                    <ul class="space-y-3 text-lg">
-                        <li><i class="material-icons text-primary mr-3">phone</i> Telepon: (021) 12345678</li>
-                        <li><i class="material-icons text-primary mr-3">email</i> Email: info@martabakmanis.com</li>
-                        <li><i class="material-icons text-primary mr-3">location_on</i> Alamat: Jl. Martabak No. 123, Jakarta</li>
-                        <li><i class="material-icons text-primary mr-3">whatsapp</i> WhatsApp: 083801928405</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Member Dashboard Page -->
-        <div id="member-dashboard" class="page">
-            <div class="header">
-                <h1 class="header-title">Dashboard Member</h1>
-                <div class="header-user">
-                    <div class="user-avatar" id="memberAvatar">U</div>
-                    <span id="memberName">User</span>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                <div class="md:col-span-1">
-                    <div class="points-card">
-                        <h3 class="text-2xl font-bold mb-3">Poin Anda</h3>
-                        <div class="points-value" id="memberPoints">0</div>
-                        <p class="text-lg">300 poin untuk menukar produk gratis</p>
-                        <div class="points-progress">
-                            <div
-                                class="points-progress-bar"
-                                id="pointsProgress"
-                                style={{ width: '0%' }}
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="md:col-span-2">
-                    <div class="royal-card h-full">
-                        <div class="p-8 h-full flex flex-col justify-between">
-                            <div>
-                                <h3 class="text-2xl font-bold mb-6">Informasi Member</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <p class="text-sm text-gray-500 mb-2">ID Member</p>
-                                        <p class="font-semibold text-lg" id="memberIdDisplay">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-500 mb-2">Email</p>
-                                        <p class="font-semibold text-lg" id="memberEmailDisplay">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-500 mb-2">Telepon</p>
-                                        <p class="font-semibold text-lg" id="memberPhoneDisplay">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-500 mb-2">Tanggal Bergabung</p>
-                                        <p class="font-semibold text-lg" id="memberJoinDateDisplay">-</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex gap-4 mt-6">
-                                <button
-                                    class="gold-button"
-                                    id="showQRCodeBtn"
-                                >
-                                    Tampilkan QR Code
-                                </button>
-                                <button
-                                    class="btn-secondary"
-                                    id="redeemPointsBtn"
-                                >
-                                    Tukar Poin
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="royal-card">
-                <div class="p-8">
-                    <h3 class="text-2xl font-bold mb-6">Riwayat Transaksi</h3>
-                    
-                    <div id="transactionHistory">
-                        <div class="loader"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Admin Dashboard Page -->
-        <div id="admin-dashboard" class="page">
-            <div class="header">
-                <h1 class="header-title">Dashboard Admin</h1>
-                <div class="header-user">
-                    <div class="user-avatar">A</div>
-                    <span>Admin</span>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                <div class="stat-card">
-                    <i class="material-icons stat-icon">people</i>
-                    <div class="stat-value" id="totalMembers">0</div>
-                    <div class="stat-label">Total Member</div>
-                </div>
-                
-                <div class="stat-card">
-                    <i class="material-icons stat-icon">receipt</i>
-                    <div class="stat-value" id="totalTransactions">0</div>
-                    <div class="stat-label">Total Transaksi</div>
-                </div>
-                
-                <div class="stat-card">
-                    <i class="material-icons stat-icon">stars</i>
-                    <div class="stat-value" id="totalPointsIssued">0</div>
-                    <div class="stat-label">Total Poin Dikeluarkan</div>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <div class="royal-card">
-                    <div class="p-8">
-                        <h3 class="text-2xl font-bold mb-6">Cari Member</h3>
-                        
-                        <div class="form-group mb-6">
-                            <label class="form-label">Cari Member (ID atau Nama)</label>
-                            <div class="flex gap-3">
-                                <input
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Masukkan ID atau nama member"
-                                    id="searchMemberInput"
-                                />
-                                <button
-                                    class="gold-button"
-                                    id="searchMemberBtn"
-                                >
-                                    Cari
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <button
-                            class="btn-secondary w-full mb-6"
-                            id="scanQRBtn"
-                        >
-                            Scan QR Code Member
-                        </button>
-                        
-                        <div id="memberSearchResult"></div>
-                    </div>
-                </div>
-                
-                <div class="royal-card">
-                    <div class="p-8">
-                        <h3 class="text-2xl font-bold mb-6">Input Transaksi</h3>
-                        
-                        <form id="transactionForm">
-                            <div class="form-group">
-                                <label class="form-label">ID Member</label>
-                                <input
-                                    type="text"
-                                    class="form-input"
-                                    id="transactionMemberId"
-                                    readonly
-                                />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Produk</label>
-                                <select
-                                    class="form-input"
-                                    id="transactionProduct"
-                                    required
-                                >
-                                    <option value="">Pilih Produk</option>
-                                    <option value="Martabak Coklat">Martabak Coklat</option>
-                                    <option value="Martabak Keju">Martabak Keju</option>
-                                    <option value="Martabak Durian">Martabak Durian</option>
-                                    <option value="Martabak Kacang">Martabak Kacang</option>
-                                    <option value="Martabak Pisang">Martabak Pisang</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Jumlah Pembelian</label>
-                                <input
-                                    type="number"
-                                    class="form-input"
-                                    min="1"
-                                    value="1"
-                                    id="transactionAmount"
-                                />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Poin yang Diberikan</label>
-                                <input
-                                    type="number"
-                                    class="form-input"
-                                    value="5"
-                                    id="transactionPoints"
-                                    readonly
-                                />
-                            </div>
-                            
-                            <button
-                                type="submit"
-                                class="gold-button w-full"
-                            >
-                                Simpan Transaksi
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="royal-card">
-                <div class="p-8">
-                    <h3 class="text-2xl font-bold mb-6">Daftar Member</h3>
-                    
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID Member</th>
-                                    <th>Nama</th>
-                                    <th>Email</th>
-                                    <th>Telepon</th>
-                                    <th>Poin</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="membersTable">
-                                <tr>
-                                    <td colspan="6" class="text-center py-8">
-                                        <div class="loader"></div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    
-    <!-- QR Code Modal -->
-    <div class="modal" id="qrCodeModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">QR Code Member</h3>
-                <button class="modal-close" id="closeQRModal">
-                    &times;
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="qr-container">
-                    <div id="qrcode"></div>
-                    <p class="mt-4 text-lg">ID Member: <strong id="qrMemberId">-</strong></p>
-                    <button
-                        class="gold-button mt-4"
-                        id="downloadQRBtn"
-                    >
-                        Download QR Code
-                    </button>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" id="closeQRModal2">
-                    Tutup
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- QR Scanner Modal -->
-    <div class="modal" id="qrScannerModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Scan QR Code Member</h3>
-                <button class="modal-close" id="closeScannerModal">
-                    &times;
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="scanner-container">
-                    <div id="qr-reader"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" id="closeScannerModal2">
-                    Tutup
-                </button>
-            </div>
+            <!-- Page Content -->
+            <main id="content-area" class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+                <!-- Konten akan dimuat di sini oleh JavaScript -->
+            </main>
         </div>
     </div>
 
     <script>
-        // Google Apps Script Web App URLs
-        const MEMBER_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxqv4GQ8NLzRdYm45fo9DBsolS1IN2kCgRsEVD-inwfCYd77BHA6qpZ1UR7tKhs2IueA/exec';
-        const TRANSACTION_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynLjiBEVcShk35S2AN2Pl-F7hx_WV33Djb51Bxo1ShYPBxMYJhGUIaTSN1OEncUAoB/exec';
-        
-        // Global State
-        let currentPage = 'beranda';
-        let currentUser = null;
-        let isAdmin = false;
-        let isLoggedIn = false;
-        let selectedMember = null;
-        let html5QrCode = null;
-        
-        // Debug Mode
-        const DEBUG_MODE = true;
-        
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is already logged in
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                try {
-                    const user = JSON.parse(savedUser);
-                    currentUser = user;
-                    isLoggedIn = true;
-                    isAdmin = user.isAdmin || false;
-                    updateNavigation();
-                    if (isAdmin) {
-                        showPage('admin-dashboard');
-                    } else {
-                        showPage('member-dashboard');
-                    }
-                } catch (error) {
-                    logDebug('Error loading user from localStorage: ' + error);
-                }
-            }
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Setup debug panel
-            setupDebugPanel();
+        // --- KONFIGURASI URL SCRIPT ---
+        const URL_SCRIPT_MEMBER = 'https://script.google.com/macros/s/AKfycbwxqv4GQ8NLzRdYm45fo9DBsolS1IN2kCgRsEVD-inwfCYd77BHA6qpZ1UR7tKhs2IueA/exec';
+        const URL_SCRIPT_TRANSAKSI = 'https://script.google.com/macros/s/AKfycbynLjiBEVcShk35S2AN2Pl-F7hx_WV33Djb51Bxo1ShYPBxMYJhGUIaTSN1OEncUAoB/exec';
+        const URL_SCRIPT_MENU = 'https://script.google.com/macros/s/AKfycbxtcWkT75gS0Nai1loJVHqUGwWidbKPzQK1FS036_fHFUpmX8l41YmjD437oa0-PTqU/exec';
+        const URL_SCRIPT_VOUCHER = 'https://script.google.com/macros/s/AKfycbwp_7iZ8OQ28r9h57LGYoTEiZK_fNT2Xys4Eot5kMLdSiert4TzNR8zsLqlqvRiBunY/exec';
+
+        // --- STATE MANAJEMEN ---
+        let state = { page: 'beranda', user: null, menu: [], analytics: null };
+        const contentArea = document.getElementById('content-area');
+        const navItems = document.querySelectorAll('.nav-item');
+        const headerUserInfo = document.getElementById('header-user-info');
+
+        // --- FUNGSI UTAMA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupNavigation();
+            showPage('beranda');
+            loadMenu();
         });
-        
-        // Debug Functions
-        function setupDebugPanel() {
-            const debugToggle = document.getElementById('debugToggle');
-            const debugPanel = document.getElementById('debugPanel');
-            
-            if (debugToggle && debugPanel) {
-                debugToggle.addEventListener('click', function() {
-                    debugPanel.classList.toggle('show');
-                });
-            }
-        }
-        
-        function logDebug(message) {
-            if (DEBUG_MODE) {
-                const debugPanel = document.getElementById('debugPanel');
-                if (debugPanel) {
-                    const timestamp = new Date().toLocaleTimeString();
-                    debugPanel.innerHTML += `<div>[${timestamp}] ${message}</div>`;
-                    debugPanel.scrollTop = debugPanel.scrollHeight;
-                }
-                console.log(message);
-            }
-        }
-        
-        // Setup Event Listeners
-        function setupEventListeners() {
-            // Navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
+
+        function setupNavigation() {
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const page = this.getAttribute('data-page');
+                    const page = item.dataset.page;
+                    if (page === 'dashboardMember' && (!state.user || state.user.type !== 'member')) { showNotification('Silakan login terlebih dahulu.', 'error'); showPage('login'); return; }
+                    if (page === 'dashboardAdmin' && (!state.user || state.user.type !== 'admin')) { showNotification('Akses terbatas untuk admin.', 'error'); return; }
                     showPage(page);
                 });
             });
-            
-            // Mobile menu toggle
-            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-            if (mobileMenuToggle) {
-                mobileMenuToggle.addEventListener('click', function() {
-                    const sidebar = document.getElementById('sidebar');
-                    if (sidebar) {
-                        sidebar.classList.toggle('active');
-                    }
-                });
-            }
-            
-            // Logout
-            const logoutLink = document.getElementById('logoutLink');
-            if (logoutLink) {
-                logoutLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    logout();
-                });
-            }
-            
-            // Registration form
-            const registrationForm = document.getElementById('registrationForm');
-            if (registrationForm) {
-                registrationForm.addEventListener('submit', handleRegistration);
-            }
-            
-            // Member login form
-            const memberLoginForm = document.getElementById('memberLoginForm');
-            if (memberLoginForm) {
-                memberLoginForm.addEventListener('submit', handleMemberLogin);
-            }
-            
-            // Admin login form
-            const adminLoginForm = document.getElementById('adminLoginForm');
-            if (adminLoginForm) {
-                adminLoginForm.addEventListener('submit', handleAdminLogin);
-            }
-            
-            // Forgot password
-            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-            if (forgotPasswordLink) {
-                forgotPasswordLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    window.open('https://wa.me/6283801928405?text=Halo%20Admin%20Martabak%20Manis,%20saya%20lupa%20kata%20sandi%20akun%20member%20saya.', '_blank');
-                });
-            }
-            
-            // Member dashboard
-            const showQRCodeBtn = document.getElementById('showQRCodeBtn');
-            if (showQRCodeBtn) {
-                showQRCodeBtn.addEventListener('click', showMemberQRCode);
-            }
-            
-            const redeemPointsBtn = document.getElementById('redeemPointsBtn');
-            if (redeemPointsBtn) {
-                redeemPointsBtn.addEventListener('click', redeemPoints);
-            }
-            
-            // Admin dashboard
-            const searchMemberBtn = document.getElementById('searchMemberBtn');
-            if (searchMemberBtn) {
-                searchMemberBtn.addEventListener('click', searchMember);
-            }
-            
-            const scanQRBtn = document.getElementById('scanQRBtn');
-            if (scanQRBtn) {
-                scanQRBtn.addEventListener('click', showQRScanner);
-            }
-            
-            const transactionForm = document.getElementById('transactionForm');
-            if (transactionForm) {
-                transactionForm.addEventListener('submit', handleTransactionSubmit);
-            }
-            
-            // Transaction amount change
-            const transactionAmount = document.getElementById('transactionAmount');
-            if (transactionAmount) {
-                transactionAmount.addEventListener('input', updateTransactionPoints);
-            }
-            
-            // Modal close buttons
-            const closeQRModal = document.getElementById('closeQRModal');
-            const closeQRModal2 = document.getElementById('closeQRModal2');
-            const downloadQRBtn = document.getElementById('downloadQRBtn');
-            
-            if (closeQRModal) {
-                closeQRModal.addEventListener('click', closeQRModal);
-            }
-            
-            if (closeQRModal2) {
-                closeQRModal2.addEventListener('click', closeQRModal);
-            }
-            
-            if (downloadQRBtn) {
-                downloadQRBtn.addEventListener('click', downloadQRCode);
-            }
-            
-            const closeScannerModal = document.getElementById('closeScannerModal');
-            const closeScannerModal2 = document.getElementById('closeScannerModal2');
-            
-            if (closeScannerModal) {
-                closeScannerModal.addEventListener('click', closeScannerModal);
-            }
-            
-            if (closeScannerModal2) {
-                closeScannerModal2.addEventListener('click', closeScannerModal);
-            }
         }
-        
-        // Page Navigation
-        function showPage(pageId) {
-            logDebug(`Navigating to page: ${pageId}`);
-            
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
+
+        function showPage(pageName) {
+            state.page = pageName;
+            updateActiveNav(pageName);
+            updateHeader();
+            let html = '';
+            switch(pageName) {
+                case 'beranda': html = getBerandaHTML(); break;
+                case 'menu': html = getMenuHTML(); break;
+                case 'daftar': html = getDaftarHTML(); break;
+                case 'login': html = getLoginHTML(); break;
+                case 'loginAdmin': html = getLoginAdminHTML(); break;
+                case 'dashboardMember': html = getDashboardMemberHTML(); break;
+                case 'dashboardAdmin': html = getDashboardAdminHTML(); break;
+                case 'tentang': html = getTentangHTML(); break;
+                default: html = '<h1 class="text-4xl font-bold text-center text-gray-500 mt-20">Halaman tidak ditemukan</h1>';
+            }
+            contentArea.innerHTML = `<div class="page-content p-4 md:p-8 lg:p-12">${html}</div>`;
+            if (pageName === 'dashboardMember') renderMemberDashboard();
+            if (pageName === 'dashboardAdmin') renderAdminDashboard();
+        }
+
+        function updateActiveNav(pageName) {
+            navItems.forEach(item => {
+                item.classList.remove('bg-gray-700', 'text-white');
+                if (item.dataset.page === pageName) item.classList.add('bg-gray-700', 'text-white');
             });
-            
-            // Show selected page
-            const selectedPage = document.getElementById(pageId);
-            if (selectedPage) {
-                selectedPage.classList.add('active');
-            }
-            
-            // Update navigation
-            currentPage = pageId;
-            updateNavigation();
-            
-            // Close mobile menu
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar) {
-                sidebar.classList.remove('active');
-            }
-            
-            // Load page-specific data
-            if (pageId === 'member-dashboard' && currentUser) {
-                loadMemberDashboard();
-            } else if (pageId === 'admin-dashboard' && isAdmin) {
-                loadAdminDashboard();
-            }
         }
-        
-        // Update Navigation
-        function updateNavigation() {
-            const authLinks = document.querySelectorAll('.nav-auth');
-            const memberLinks = document.querySelectorAll('.nav-member');
-            const adminLinks = document.querySelectorAll('.nav-admin');
-            const loggedInLinks = document.querySelectorAll('.nav-logged-in');
-            
-            if (isLoggedIn) {
-                authLinks.forEach(link => link.classList.add('hidden'));
-                loggedInLinks.forEach(link => link.classList.remove('hidden'));
-                
-                if (isAdmin) {
-                    memberLinks.forEach(link => link.classList.add('hidden'));
-                    adminLinks.forEach(link => link.classList.remove('hidden'));
-                } else {
-                    memberLinks.forEach(link => link.classList.remove('hidden'));
-                    adminLinks.forEach(link => link.classList.add('hidden'));
-                }
+
+        function updateHeader() {
+            if (state.user) {
+                headerUserInfo.textContent = `Login sebagai: ${state.user.data.nama || 'Admin'}`;
             } else {
-                authLinks.forEach(link => link.classList.remove('hidden'));
-                memberLinks.forEach(link => link.classList.add('hidden'));
-                adminLinks.forEach(link => link.classList.add('hidden'));
-                loggedInLinks.forEach(link => link.classList.add('hidden'));
+                headerUserInfo.textContent = '';
             }
-            
-            // Update active navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-page') === currentPage) {
-                    link.classList.add('active');
-                }
-            });
         }
-        
-        // Show Notification
+
+        // --- FUNGSI API ---
+        async function callAPI(action, payload = {}, endpoint) {
+            const scriptUrl = endpoint === 'member' ? URL_SCRIPT_MEMBER :
+                              endpoint === 'transaksi' ? URL_SCRIPT_TRANSAKSI :
+                              endpoint === 'menu' ? URL_SCRIPT_MENU :
+                              endpoint === 'voucher' ? URL_SCRIPT_VOUCHER : null;
+            
+            if (!scriptUrl) { showNotification('Endpoint API tidak valid.', 'error'); return { status: 'error', message: 'Invalid endpoint' }; }
+            try {
+                const response = await fetch(scriptUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, payload }) });
+                return await response.json();
+            } catch (error) { console.error("API call failed:", error); showNotification('Terjadi kesalahan koneksi. Coba lagi.', 'error'); return { status: 'error', message: 'Koneksi gagal' }; }
+        }
+
         function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const icon = document.getElementById('notificationIcon');
-            const messageEl = document.getElementById('notificationMessage');
-            
-            if (notification && icon && messageEl) {
-                notification.className = `notification ${type}`;
-                icon.className = type === 'success' ? 'material-icons' : 'material-icons';
-                icon.textContent = type === 'success' ? 'check_circle' : 'error';
-                messageEl.textContent = message;
-                
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
+            const notification = document.createElement('div'); notification.className = `notification ${type}`; notification.textContent = message; document.body.appendChild(notification);
+            setTimeout(() => { notification.style.animation = 'slideIn 0.4s reverse'; setTimeout(() => notification.remove(), 400); }, 3000);
         }
-        
-        // Generate Member ID
-        function generateMemberId() {
-            const timestamp = new Date().getTime();
-            const random = Math.floor(Math.random() * 1000);
-            return `MBR${timestamp}${random}`;
-        }
-        
-        // Handle Registration
-        async function handleRegistration(e) {
-            e.preventDefault();
-            
-            logDebug('Registration form submitted');
-            
-            const formData = new FormData(e.target);
-            const password = formData.get('password');
-            const confirmPassword = formData.get('konfirmasiPassword');
-            
-            if (password !== confirmPassword) {
-                showNotification('Kata sandi tidak cocok!', 'error');
-                return;
-            }
-            
-            if (!formData.get('termsCheck')) {
-                showNotification('Anda harus menyetujui syarat dan ketentuan!', 'error');
-                return;
-            }
-            
-            const btn = document.getElementById('registerBtn');
-            if (btn) {
-                btn.disabled = true;
-                btn.textContent = 'Mendaftarkan...';
-            }
-            
-            const memberData = {
-                namaLengkap: formData.get('namaLengkap'),
-                email: formData.get('email'),
-                telepon: formData.get('telepon'),
-                tanggalLahir: formData.get('tanggalLahir'),
-                alamat: formData.get('alamat'),
-                password: password
-            };
-            
-            logDebug('Member data:', memberData);
-            
-            try {
-                const response = await fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'registerMember',
-                        memberData: memberData
-                    })
-                });
-                
-                logDebug('Registration response status:', response.status);
-                
-                const data = await response.json();
-                logDebug('Registration response data:', data);
-                
-                if (data.status === 'success') {
-                    showNotification('Pendaftaran berhasil! QR Code telah dibuat.', 'success');
-                    showQRCode(data.memberId);
+
+        // --- HTML UNTUK SETIAP HALAMAN ---
+        function getBerandaHTML() { return `<div class="text-center max-w-4xl mx-auto"><h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">Selamat Datang di MartabakKu</h1><p class="text-xl text-gray-600 mb-10 leading-relaxed">Nikmati martabak terenak dengan keuntungan eksklusif menjadi member kami. Dapatkan poin, penawaran spesial, dan banyak lagi!</p><div class="relative rounded-2xl overflow-hidden shadow-2xl hover-lift mb-10"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Martabak Lezat" class="w-full h-64 md:h-96 object-cover"><div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div></div><div class="flex flex-col sm:flex-row gap-4 justify-center"><button onclick="showPage('daftar')" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"><i class="fas fa-user-plus mr-2"></i> Daftar Member Sekarang</button><button onclick="showPage('login')" class="bg-white text-gray-800 border-2 border-gray-300 px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl hover:border-orange-500 transition-all duration-300"><i class="fas fa-sign-in-alt mr-2"></i> Login Member</button></div></div>`; }
+        function getMenuHTML() { const menuItems = state.menu.map(item => `<div class="bg-white rounded-2xl shadow-lg overflow-hidden hover-lift"><img src="${item.gambar_url || 'https://via.placeholder.com/400x250.png?text=Menu'}" alt="${item.nama_menu}" class="w-full h-48 object-cover"><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-2">${item.nama_menu}</h3><p class="text-gray-600 mb-4">${item.deskripsi}</p><p class="text-2xl font-bold text-orange-600">Rp ${item.harga.toLocaleString('id-ID')}</p></div></div>`).join(''); return `<div class="max-w-7xl mx-auto"><h2 class="text-4xl font-bold text-center text-gray-800 mb-4">Menu Kami</h2><p class="text-center text-gray-600 mb-10">Pilih dari berbagai pilihan martabak favorit kami, dibuat dengan bahan-bahan terbaik.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">${menuItems || '<p class="col-span-full text-center text-gray-500">Menu sedang dimuat...</p>'}</div></div>`; }
+        function getDaftarHTML() { return `<div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-800 mb-2">Bergabung Bersama Kami</h2><p class="text-gray-600 mb-6">Daftar dan mulai kumpulkan poinnya!</p><form id="form-daftar" class="space-y-5"><div><label class="block text-gray-700 text-sm font-semibold mb-2">Nama Lengkap</label><input type="text" id="nama" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">Email</label><input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">No. Telepon</label><input type="tel" id="no_telp" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">Kata Sandi</label><input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 px-4 rounded-lg hover:from-orange-600 hover:to-orange-700 transition duration-300 shadow-lg">Daftar Sekarang</button></form><div id="qr-result" class="mt-8 text-center"></div></div>`; }
+        function getLoginHTML() { return `<div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-800 mb-6">Selamat Datang Kembali</h2><form id="form-login" class="space-y-5"><div><label class="block text-gray-700 text-sm font-semibold mb-2">Email</label><input type="email" id="login-email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">Kata Sandi</label><input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 px-4 rounded-lg hover:from-orange-600 hover:to-orange-700 transition duration-300 shadow-lg">Login</button></form><div class="mt-6 text-center"><a href="https://wa.me/6283801928405?text=Halo%20admin,%20saya%20lupa%20kata%20sandi." target="_blank" class="text-sm text-orange-600 hover:underline font-semibold">Lupa Kata Sandi?</a></div></div>`; }
+        function getLoginAdminHTML() { return `<div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 border-t-4 border-red-500"><h2 class="text-3xl font-bold text-gray-800 mb-6">Portal Admin</h2><form id="form-login-admin" class="space-y-5"><div><label class="block text-gray-700 text-sm font-semibold mb-2">Username</label><input type="text" id="admin-username" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">Password</label><input type="password" id="admin-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition" required></div><button type="submit" class="w-full bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-3 px-4 rounded-lg hover:from-red-600 hover:to-red-700 transition duration-300 shadow-lg">Login</button></form></div>`; }
+        function getDashboardMemberHTML() { return `<div class="max-w-5xl mx-auto"><div class="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl shadow-xl p-8 text-white mb-8"><h2 class="text-3xl font-bold mb-2">Dashboard Member</h2><p class="text-lg opacity-90">Selamat datang, <span id="member-name" class="font-semibold"></span>!</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"><div class="bg-white p-6 rounded-xl shadow-lg hover-lift text-center"><div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-coins text-3xl text-yellow-600"></i></div><h3 class="text-lg font-semibold text-gray-700">Total Poin Anda</h3><p id="member-points" class="text-4xl font-bold text-orange-600 mt-2">0</p></div><div class="bg-white p-6 rounded-xl shadow-lg hover-lift text-center"><div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-gift text-3xl text-green-600"></i></div><h3 class="text-lg font-semibold text-gray-700">Tukar Poin</h3><p class="text-gray-600 mt-2">300 Poin = 1 Martabak Gratis</p></div><div class="bg-white p-6 rounded-xl shadow-lg hover-lift text-center"><div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-id-card text-3xl text-blue-600"></i></div><h3 class="text-lg font-semibold text-gray-700">ID Member</h3><p id="member-id" class="text-xl font-bold text-gray-800 mt-2">-</p></div></div><div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold text-gray-800 mb-4">Riwayat Transaksi Poin</h3><div id="transaction-history" class="overflow-x-auto"><p class="text-gray-500 text-center py-4">Memuat riwayat...</p></div></div></div>`; }
+        function getDashboardAdminHTML() { return `<div class="max-w-7xl mx-auto"><h2 class="text-4xl font-bold text-gray-800 mb-8">Dashboard Admin</h2><div class="bg-white rounded-xl shadow-lg"><div class="border-b border-gray-200"><nav class="flex -mb-px"><button onclick="showAdminTab('analytics')" class="admin-tab py-4 px-6 text-sm font-semibold text-orange-600 border-b-2 border-orange-600 focus:outline-none">Analitik</button><button onclick="showAdminTab('transaction')" class="admin-tab py-4 px-6 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">Input Transaksi</button><button onclick="showAdminTab('voucher')" class="admin-tab py-4 px-6 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">Manajemen Voucher</button><button onclick="showAdminTab('export')" class="admin-tab py-4 px-6 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">Export Data</button></nav></div><div id="admin-tab-content" class="p-6"></div></div></div>`; }
+        function getTentangHTML() { return `<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12"><h2 class="text-4xl font-bold text-gray-800 mb-6">Tentang MartabakKu</h2><div class="prose prose-lg text-gray-600"><p>MartabakKu adalah bisnis keluarga yang telah berdiri sejak tahun 2020. Kami berkomitmen untuk menyajikan martabak dengan rasa autentik dan bahan-bahan pilihan untuk memanjakan lidah Anda.</p><p>Visi kami adalah menjadi pilihan utama untuk pencinta martabak di kota Anda, dengan selalu mengutamakan kualitas, kebersihan, dan kepuasan pelanggan di atas segalanya.</p></div><div class="mt-10 p-6 bg-gray-50 rounded-xl"><h3 class="text-2xl font-bold text-gray-800 mb-4">Hubungi Kami</h3><div class="space-y-2 text-gray-600"><p><i class="fas fa-map-marker-alt mr-3 text-orange-500"></i> Jl. Contoh No. 123, Jakarta, Indonesia</p><p><i class="fas fa-phone mr-3 text-orange-500"></i> 0838-0192-8405</p><p><i class="fas fa-clock mr-3 text-orange-500"></i> Buka: 15:00 - 23:00 WIB</p></div></div></div>`; }
+
+        // --- EVENT LISTENER UNTUK SEMUA FORM ---
+        document.addEventListener('submit', async (e) => {
+            if (e.target.id === 'form-daftar') {
+                e.preventDefault();
+                const payload = { nama: document.getElementById('nama').value, email: document.getElementById('email').value, no_telp: document.getElementById('no_telp').value, password: document.getElementById('password').value };
+                const result = await callAPI('registerMember', payload, 'member');
+                if (result.status === 'success') {
+                    showNotification(result.message, 'success');
+                    const qrDiv = document.getElementById('qr-result');
+                    qrDiv.innerHTML = `<p class="font-semibold mb-2">QR Code Member Anda:</p><img src="${result.data.qrCodeData}" alt="QR Code" class="mx-auto rounded-lg shadow-md"><p class="text-sm text-gray-600 mt-2">ID Member: ${result.data.id_member}</p><p class="text-sm text-gray-500">Simpan QR Code ini untuk ditunjukkan saat pembelian.</p>`;
                     e.target.reset();
-                } else {
-                    showNotification(data.message, 'error');
-                }
-            } catch (error) {
-                logDebug('Registration error:', error);
-                showNotification('Terjadi kesalahan saat mendaftarkan member. Silakan coba lagi.', 'error');
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Daftar Sekarang';
-                }
+                } else { showNotification(result.message, 'error'); }
             }
-        }
-        
-        // Handle Member Login
-        async function handleMemberLogin(e) {
-            e.preventDefault();
-            
-            logDebug('Member login form submitted');
-            
-            const formData = new FormData(e.target);
-            const btn = document.getElementById('loginMemberBtn');
-            
-            if (btn) {
-                btn.disabled = true;
-                btn.textContent = 'Memverifikasi...';
+            if (e.target.id === 'form-login') {
+                e.preventDefault();
+                const payload = { email: document.getElementById('login-email').value, password: document.getElementById('login-password').value };
+                const result = await callAPI('loginMember', payload, 'member');
+                if (result.status === 'success') { state.user = { type: 'member', data: result.data }; showNotification(result.message, 'success'); showPage('dashboardMember'); }
+                else { showNotification(result.message, 'error'); }
             }
-            
-            try {
-                const response = await fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'loginMember',
-                        email: formData.get('email'),
-                        password: formData.get('password')
-                    })
-                });
-                
-                logDebug('Member login response status:', response.status);
-                
-                const data = await response.json();
-                logDebug('Member login response data:', data);
-                
-                if (data.status === 'success') {
-                    currentUser = data.member;
-                    isLoggedIn = true;
-                    isAdmin = false;
-                    localStorage.setItem('currentUser', JSON.stringify({...currentUser, isAdmin: false}));
-                    updateNavigation();
-                    showPage('member-dashboard');
-                    showNotification('Login berhasil!', 'success');
-                } else {
-                    showNotification(data.message, 'error');
-                }
-            } catch (error) {
-                logDebug('Member login error:', error);
-                showNotification('Terjadi kesalahan saat login. Silakan coba lagi.', 'error');
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Login';
-                }
+            if (e.target.id === 'form-login-admin') {
+                e.preventDefault();
+                const payload = { username: document.getElementById('admin-username').value, password: document.getElementById('admin-password').value };
+                const result = await callAPI('loginAdmin', payload, 'member');
+                if (result.status === 'success') { state.user = { type: 'admin', data: { nama: 'Admin' } }; showNotification(result.message, 'success'); showPage('dashboardAdmin'); }
+                else { showNotification(result.message, 'error'); }
             }
-        }
-        
-        // Handle Admin Login
-        async function handleAdminLogin(e) {
-            e.preventDefault();
-            
-            logDebug('Admin login form submitted');
-            
-            const formData = new FormData(e.target);
-            const btn = document.getElementById('loginAdminBtn');
-            
-            if (btn) {
-                btn.disabled = true;
-                btn.textContent = 'Memverifikasi...';
-            }
-            
-            try {
-                const response = await fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'loginAdmin',
-                        username: formData.get('username'),
-                        password: formData.get('password')
-                    })
-                });
-                
-                logDebug('Admin login response status:', response.status);
-                
-                const data = await response.json();
-                logDebug('Admin login response data:', data);
-                
-                if (data.status === 'success') {
-                    currentUser = data.admin;
-                    isLoggedIn = true;
-                    isAdmin = true;
-                    localStorage.setItem('currentUser', JSON.stringify({...currentUser, isAdmin: true}));
-                    updateNavigation();
-                    showPage('admin-dashboard');
-                    showNotification('Login admin berhasil!', 'success');
-                } else {
-                    showNotification(data.message, 'error');
-                }
-            } catch (error) {
-                logDebug('Admin login error:', error);
-                showNotification('Terjadi kesalahan saat login. Silakan coba lagi.', 'error');
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Login';
-                }
-            }
-        }
-        
-        // Logout
-        function logout() {
-            logDebug('User logged out');
-            currentUser = null;
-            isLoggedIn = false;
-            isAdmin = false;
-            localStorage.removeItem('currentUser');
-            updateNavigation();
-            showPage('beranda');
-            showNotification('Anda telah logout', 'success');
-        }
-        
-        // Load Member Dashboard
-        async function loadMemberDashboard() {
-            if (!currentUser) {
-                logDebug('No current user for member dashboard');
-                return;
-            }
-            
-            logDebug('Loading member dashboard for user:', currentUser.id);
-            
-            try {
-                // Update member info
-                const memberAvatar = document.getElementById('memberAvatar');
-                const memberName = document.getElementById('memberName');
-                const memberIdDisplay = document.getElementById('memberIdDisplay');
-                const memberEmailDisplay = document.getElementById('memberEmailDisplay');
-                const memberPhoneDisplay = document.getElementById('memberPhoneDisplay');
-                const memberJoinDateDisplay = document.getElementById('memberJoinDateDisplay');
-                
-                if (memberAvatar) memberAvatar.textContent = currentUser.namaLengkap.charAt(0).toUpperCase();
-                if (memberName) memberName.textContent = currentUser.namaLengkap;
-                if (memberIdDisplay) memberIdDisplay.textContent = currentUser.id;
-                if (memberEmailDisplay) memberEmailDisplay.textContent = currentUser.email;
-                if (memberPhoneDisplay) memberPhoneDisplay.textContent = currentUser.telepon;
-                if (memberJoinDateDisplay) memberJoinDateDisplay.textContent = currentUser.tanggalDaftar;
-                
-                // Get updated member data
-                const response = await fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'getMemberById',
-                        memberId: currentUser.id
-                    })
-                });
-                
-                const data = await response.json();
-                logDebug('Member data response:', data);
-                
-                if (data.status === 'success') {
-                    const member = data.member;
-                    const memberPoints = document.getElementById('memberPoints');
-                    const pointsProgress = document.getElementById('pointsProgress');
-                    
-                    if (memberPoints) memberPoints.textContent = member.points || 0;
-                    
-                    const progressPercentage = (member.points / 300) * 100;
-                    if (pointsProgress) pointsProgress.style.width = `${progressPercentage}%`;
-                    
-                    // Load transactions
-                    loadMemberTransactions();
-                }
-            } catch (error) {
-                logDebug('Error loading member dashboard:', error);
-            }
-        }
-        
-        // Load Member Transactions
-        async function loadMemberTransactions() {
-            if (!currentUser) return;
-            
-            logDebug('Loading transactions for member:', currentUser.id);
-            
-            try {
-                const response = await fetch(TRANSACTION_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'getMemberTransactions',
-                        memberId: currentUser.id
-                    })
-                });
-                
-                const data = await response.json();
-                logDebug('Transactions response:', data);
-                
-                if (data.status === 'success') {
-                    const transactions = data.transactions;
-                    const container = document.getElementById('transactionHistory');
-                    
-                    if (container) {
-                        if (transactions.length > 0) {
-                            let html = '';
-                            transactions.forEach(transaction => {
-                                html += `
-                                    <div class="transaction-item">
-                                        <div class="transaction-info">
-                                            <h4>${transaction.product}</h4>
-                                            <p class="transaction-date">${transaction.date}</p>
-                                        </div>
-                                        <div class="transaction-points">
-                                            ${transaction.points > 0 ? '+' : ''}${transaction.points} poin
-                                        </div>
-                                    </div>
-                                `;
-                            });
-                            container.innerHTML = html;
-                        } else {
-                            container.innerHTML = '<p class="text-center text-gray-500 py-8">Belum ada transaksi</p>';
-                        }
-                    }
-                }
-            } catch (error) {
-                logDebug('Error loading transactions:', error);
-            }
-        }
-        
-        // Load Admin Dashboard
-        async function loadAdminDashboard() {
-            logDebug('Loading admin dashboard');
-            
-            try {
-                // Get member stats
-                const memberResponse = await fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'getAdminStats'
-                    })
-                });
-                
-                const memberData = await memberResponse.json();
-                logDebug('Member stats response:', memberData);
-                
-                if (memberData.status === 'success') {
-                    const totalMembers = document.getElementById('totalMembers');
-                    if (totalMembers) totalMembers.textContent = memberData.stats.totalMembers;
-                }
-                
-                // Get transaction stats
-                const transactionResponse = await fetch(TRANSACTION_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'getTransactionStats'
-                    })
-                });
-                
-                const transactionData = await transactionResponse.json();
-                logDebug('Transaction stats response:', transactionData);
-                
-                if (transactionData.status === 'success') {
-                    const totalTransactions = document.getElementById('totalTransactions');
-                    const totalPointsIssued = document.getElementById('totalPointsIssued');
-                    
-                    if (totalTransactions) totalTransactions.textContent = transactionData.stats.totalTransactions;
-                    if (totalPointsIssued) totalPointsIssued.textContent = transactionData.stats.totalPointsIssued;
-                }
-                
-                // Load members table
-                loadMembersTable();
-            }
-        } catch (error) {
-                logDebug('Error loading admin dashboard:', error);
-            }
-        }
-        
-        // Load Members Table
-        async function loadMembersTable() {
-            logDebug('Loading members table');
-            
-            try {
-                const response = await fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'getAllMembers'
-                    })
-                });
-                
-                const data = await response.json();
-                logDebug('Members table response:', data);
-                
-                if (data.status === 'success') {
-                    const members = data.members;
-                    const tbody = document.getElementById('membersTable');
-                    
-                    if (tbody) {
-                        let html = '';
-                        members.forEach(member => {
-                            html += `
-                                <tr>
-                                    <td>${member.id}</td>
-                                    <td>${member.namaLengkap}</td>
-                                    <td>${member.email}</td>
-                                    <td>${member.telepon}</td>
-                                    <td>${member.points || 0}</td>
-                                    <td>
-                                        <button
-                                            class="text-blue-500 hover:underline font-medium"
-                                            onclick="selectMember('${member.id}', '${member.namaLengkap}')"
-                                        >
-                                            Pilih
-                                        </button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                        
-                        tbody.innerHTML = html;
-                    }
-                }
-            } catch (error) {
-                logDebug('Error loading members table:', error);
-            }
-        }
-        
-        // Search Member
-        async function searchMember() {
-            const searchTerm = document.getElementById('searchMemberInput').value.trim();
-            
-            if (!searchTerm) {
-                showNotification('Masukkan ID atau nama member untuk mencari.', 'error');
-                return;
-            }
-            
-            logDebug('Searching for member:', searchTerm);
-            
-            try {
-                const response = await fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'searchMember',
-                        searchTerm: searchTerm
-                    })
-                });
-                
-                const data = await response.json();
-                logDebug('Search member response:', data);
-                
-                if (data.status === 'success' && data.members.length > 0) {
-                    const member = data.members[0];
-                    selectMember(member.id, member.namaLengkap);
-                } else {
-                    showNotification('Member tidak ditemukan.', 'error');
-                }
-            } catch (error) {
-                logDebug('Error searching member:', error);
-                showNotification('Terjadi kesalahan saat mencari member. Silakan coba lagi.', 'error');
-            }
-        }
-        
-        // Select Member
-        function selectMember(memberId, memberName) {
-            logDebug('Selected member:', memberId, memberName);
-            
-            selectedMember = { id: memberId, namaLengkap: memberName };
-            const transactionMemberId = document.getElementById('transactionMemberId');
-            if (transactionMemberId) transactionMemberId.value = memberId;
-            
-            showNotification(`Member ${memberName} (${memberId}) telah dipilih.`, 'success');
-            
-            // Display selected member info
-            const resultDiv = document.getElementById('memberSearchResult');
-            if (resultDiv) {
-                resultDiv.innerHTML = `
-                    <div class="member-card">
-                        <div class="member-avatar">${memberName.charAt(0).toUpperCase()}</div>
-                        <div class="member-info">
-                            <h3>${memberName}</h3>
-                            <p>ID: ${memberId}</p>
-                        </div>
-                        <div class="member-points">
-                            <div class="member-points-value" id="selectedMemberPoints">-</div>
-                            <div class="member-points-label">Poin</div>
-                        </div>
-                    </div>
-                `;
-                
-                // Get member points
-                fetch(MEMBER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'getMemberById',
-                        memberId: memberId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const selectedMemberPoints = document.getElementById('selectedMemberPoints');
-                        if (selectedMemberPoints) selectedMemberPoints.textContent = data.member.points;
-                        selectedMember.points = data.member.points;
-                    }
-                });
-            }
-        }
-        
-        // Update Transaction Points
-        function updateTransactionPoints() {
-            const amount = parseInt(document.getElementById('transactionAmount').value) || 1;
-            const points = amount * 5;
-            const transactionPoints = document.getElementById('transactionPoints');
-            if (transactionPoints) transactionPoints.value = points;
-        }
-        
-        // Handle Transaction Submit
-        async function handleTransactionSubmit(e) {
-            e.preventDefault();
-            
-            const memberId = document.getElementById('transactionMemberId').value;
-            const product = document.getElementById('transactionProduct').value;
-            const amount = parseInt(document.getElementById('transactionAmount').value) || 1;
-            const points = parseInt(document.getElementById('transactionPoints').value) || 0;
-            
-            if (!memberId) {
-                showNotification('Pilih member terlebih dahulu!', 'error');
-                return;
-            }
-            
-            if (!product) {
-                showNotification('Pilih produk terlebih dahulu!', 'error');
-                return;
-            }
-            
-            logDebug('Submitting transaction:', { memberId, product, amount, points });
-            
-            try {
-                const response = await fetch(TRANSACTION_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'addTransaction',
-                        transactionData: {
-                            memberId: memberId,
-                            product: product,
-                            amount: amount,
-                            points: points
-                        }
-                    })
-                });
-                
-                const data = await response.json();
-                logDebug('Transaction response:', data);
-                
-                if (data.status === 'success') {
-                    showNotification('Transaksi berhasil disimpan!', 'success');
-                    
-                    // Reset form
-                    const transactionForm = document.getElementById('transactionForm');
-                    if (transactionForm) transactionForm.reset();
-                    
-                    const transactionMemberId = document.getElementById('transactionMemberId');
-                    const transactionProduct = document.getElementById('transactionProduct');
-                    const transactionAmount = document.getElementById('transactionAmount');
-                    const transactionPoints = document.getElementById('transactionPoints');
-                    
-                    if (transactionMemberId) transactionMemberId.value = '';
-                    if (transactionProduct) transactionProduct.value = '';
-                    if (transactionAmount) transactionAmount.value = 1;
-                    if (transactionPoints) transactionPoints.value = 5;
-                    
-                    document.getElementById('memberSearchResult').innerHTML = '';
-                    selectedMember = null;
-                    
-                    // Reload dashboard
-                    loadAdminDashboard();
-                } else {
-                    showNotification(data.message, 'error');
-                }
-            } catch (error) {
-                logDebug('Error submitting transaction:', error);
-                showNotification('Terjadi kesalahan saat menyimpan transaksi. Silakan coba lagi.', 'error');
-            }
-        }
-        
-        // Show QR Code
-        function showQRCode(memberId) {
-            const qrMemberId = document.getElementById('qrMemberId');
-            if (qrMemberId) qrMemberId.textContent = memberId;
-            
-            // Clear previous QR code
-            const qrContainer = document.getElementById('qrcode');
-            if (qrContainer) qrContainer.innerHTML = '';
-            
-            // Generate new QR code
-            new QRCode(qrContainer, {
-                text: memberId,
-                width: 200,
-                height: 200,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-            
-            const modal = document.getElementById('qrCodeModal');
-            if (modal) modal.classList.add('show');
-        }
-        
-        // Show Member QR Code
-        function showMemberQRCode() {
-            if (currentUser) {
-                showQRCode(currentUser.id);
-            }
-        }
-        
-        // Close QR Modal
-        function closeQRModal() {
-            const modal = document.getElementById('qrCodeModal');
-            if (modal) modal.classList.remove('show');
-        }
-        
-        // Download QR Code
-        function downloadQRCode() {
-            const canvas = document.querySelector('#qrcode canvas');
-            if (canvas) {
-                const link = document.createElement('a');
-                link.download = `QRCode_${document.getElementById('qrMemberId').textContent}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-            }
-        }
-        
-        // Show QR Scanner
-        function showQRScanner() {
-            const modal = document.getElementById('qrScannerModal');
-            if (modal) modal.classList.add('show');
-            
-            // Initialize QR scanner
-            setTimeout(() => {
-                html5QrCode = new Html5Qrcode("qr-reader");
-                
-                html5QrCode.start(
-                    { facingMode: "environment" },
-                    {
-                        fps: 10,
-                        qrbox: { width: 250, height: 250 }
-                    },
-                    (decodedText, decodedResult) => {
-                        // Stop scanning
-                        if (html5QrCode) {
-                            html5QrCode.stop().then(() => {
-                                html5QrCode = null;
-                            }).catch((err) => {
-                                logDebug(`Unable to stop scanning: ${err}`);
-                            });
-                        }
-                        
-                        // Find member by ID
-                        logDebug('QR Code scanned:', decodedText);
-                        
-                        fetch(MEMBER_SCRIPT_URL, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                action: 'getMemberById',
-                                memberId: decodedText
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            logDebug('Member found:', data);
-                            
-                            if (data.status === 'success') {
-                                selectMember(data.member.id, data.member.namaLengkap);
-                                closeScannerModal();
-                            } else {
-                                showNotification('Member tidak ditemukan.', 'error');
-                            }
-                        })
-                        .catch(error => {
-                            logDebug('Error finding member:', error);
-                            showNotification('Terjadi kesalahan saat mencari member. Silakan coba lagi.', 'error');
-                        });
-                    },
-                    (errorMessage) => {
-                        // Parse error, ignore it
-                    }
-                ).catch((err) => {
-                    logDebug(`Unable to start scanning: ${err}`);
-                    showNotification('Tidak dapat memulai scanner. Pastikan kamera diizinkan.', 'error');
-                });
-            }, 500);
-        }
-        
-        // Close Scanner Modal
-        function closeScannerModal() {
-            const modal = document.getElementById('qrScannerModal');
-            if (modal) modal.classList.remove('show');
-            
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode = null;
-                }).catch((err) => {
-                    logDebug(`Unable to stop scanning: ${err}`);
-                });
-            }
-        }
-        
-        // Redeem Points
-        async function redeemPoints() {
-            if (!currentUser) return;
-            
-            const currentPoints = parseInt(document.getElementById('memberPoints').textContent) || 0;
-            
-            if (currentPoints < 300) {
-                showNotification('Poin Anda tidak cukup untuk menukar produk. Dibutuhkan 300 poin.', 'error');
-                return;
-            }
-            
-            if (confirm('Apakah Anda yakin ingin menukar 300 poin untuk produk gratis?')) {
-                try {
-                    const response = await fetch(MEMBER_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            action: 'redeemPoints',
-                            memberId: currentUser.id,
-                            pointsToRedeem: 300
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    logDebug('Redeem points response:', data);
-                    
-                    if (data.status === 'success') {
-                        // Update points display
-                        const newPoints = data.newPoints;
-                        const memberPoints = document.getElementById('memberPoints');
-                        const pointsProgress = document.getElementById('pointsProgress');
-                        
-                        if (memberPoints) memberPoints.textContent = newPoints;
-                        
-                        const progressPercentage = (newPoints / 300) * 100;
-                        if (pointsProgress) pointsProgress.style.width = `${progressPercentage}%`;
-                        
-                        // Add redeem transaction
-                        await fetch(TRANSACTION_SCRIPT_URL, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                action: 'addRedeemTransaction',
-                                memberId: currentUser.id,
-                                pointsRedeemed: 300
-                            })
-                        });
-                        
-                        // Reload transactions
-                        loadMemberTransactions();
-                        
-                        showNotification('Penukaran poin berhasil! Silakan ambil produk gratis Anda di kasir.', 'success');
-                    } else {
-                        showNotification(data.message, 'error');
-                    }
-                } catch (error) {
-                    logDebug('Error redeeming points:', error);
-                    showNotification('Terjadi kesalahan saat menukar poin. Silakan coba lagi.', 'error');
-                }
-            }
-        }
-        
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', function() {
-            logDebug('App initialized');
-            
-            // Check if user is already logged in
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                try {
-                    const user = JSON.parse(savedUser);
-                    logDebug('Found saved user:', user);
-                    currentUser = user;
-                    isLoggedIn = true;
-                    isAdmin = user.isAdmin || false;
-                    updateNavigation();
-                    if (isAdmin) {
-                        showPage('admin-dashboard');
-                    } else {
-                        showPage('member-dashboard');
-                    }
-                } catch (error) {
-                    logDebug('Error loading saved user:', error);
-                }
-            }
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Setup debug panel
-            setupDebugPanel();
         });
+
+        // --- FUNGSI RENDER DASHBOARD ---
+        async function renderMemberDashboard() {
+            if (!state.user || state.user.type !== 'member') return;
+            document.getElementById('member-name').textContent = state.user.data.nama;
+            document.getElementById('member-id').textContent = state.user.data.id_member;
+            const pointsRes = await callAPI('getMemberPoints', { id_member: state.user.data.id_member }, 'member');
+            if (pointsRes.status === 'success') { document.getElementById('member-points').textContent = pointsRes.data.totalPoints; }
+            const historyRes = await callAPI('getMemberTransactionHistory', { id_member: state.user.data.id_member }, 'member');
+            const historyDiv = document.getElementById('transaction-history');
+            if (historyRes.status === 'success' && historyRes.data.length > 0) {
+                const tableRows = historyRes.data.map(t => `<tr class="border-b"><td class="py-2 px-4">${new Date(t.timestamp).toLocaleString('id-ID')}</td><td class="py-2 px-4">${t.keterangan}</td><td class="py-2 px-4 font-semibold ${t.jumlah_poin > 0 ? 'text-green-600' : 'text-red-600'}">${t.jumlah_poin > 0 ? '+' : ''}${t.jumlah_poin}</td></tr>`).join('');
+                historyDiv.innerHTML = `<table class="min-w-full"><thead class="bg-gray-100"><tr><th class="py-2 px-4 text-left">Tanggal</th><th class="py-2 px-4 text-left">Keterangan</th><th class="py-2 px-4 text-left">Poin</th></tr></thead><tbody>${tableRows}</tbody></table>`;
+            } else { historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada riwayat transaksi.</p>'; }
+        }
+
+        async function renderAdminDashboard() {
+            if (!state.analytics) { const res = await callAPI('getAnalytics', {}, 'transaksi'); if (res.status === 'success') { state.analytics = res.data; } }
+            showAdminTab('analytics');
+        }
+
+        function showAdminTab(tabName) {
+            const contentDiv = document.getElementById('admin-tab-content');
+            const tabs = document.querySelectorAll('.admin-tab');
+            tabs.forEach(tab => { tab.classList.remove('border-orange-500', 'text-orange-600'); tab.classList.add('border-transparent', 'text-gray-500'); });
+            event.target.classList.remove('border-transparent', 'text-gray-500'); event.target.classList.add('border-orange-500', 'text-orange-600');
+            let html = '';
+            switch(tabName) {
+                case 'analytics': html = getAnalyticsHTML(); contentDiv.innerHTML = html; renderAnalyticsChart(); break;
+                case 'transaction': html = getTransactionHTML(); contentDiv.innerHTML = html; setupTransactionForm(); break;
+                case 'voucher': html = getVoucherHTML(); contentDiv.innerHTML = html; setupVoucherForm(); break;
+                case 'export': html = getExportHTML(); contentDiv.innerHTML = html; break;
+            }
+        }
+
+        // --- HTML UNTUK TAB ADMIN ---
+        function getAnalyticsHTML() { if (!state.analytics) return '<p>Memuat data...</p>'; return `<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-sm font-medium text-gray-500">Total Member</h3><p class="text-3xl font-bold text-gray-900">${state.analytics.totalMembers}</p></div><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-sm font-medium text-gray-500">Poin Dikeluarkan (Bulan Ini)</h3><p class="text-3xl font-bold text-orange-600">${state.analytics.totalPointsThisMonth}</p></div><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-sm font-medium text-gray-500">Top 5 Member</h3><ul class="mt-2 space-y-1">${state.analytics.topMembers.map(m => `<li class="text-sm text-gray-700">${m.id_member} - ${m.total_poin} poin</li>`).join('')}</ul></div></div><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Grafik Transaksi (Contoh)</h3><canvas id="transactionChart" width="400" height="200"></canvas></div>`; }
+        function getTransactionHTML() { return `<div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Input Transaksi Poin</h3><div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Cari Member (ID atau Scan QR)</label><div class="flex space-x-2"><input type="text" id="search-member-id" placeholder="Masukkan ID Member" class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500"><button type="button" onclick="startQRScanner()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"><i class="fas fa-qrcode"></i></button></div></div><div id="member-search-result" class="mb-4 p-4 bg-gray-100 rounded-lg hidden"></div><form id="form-transaction" class="hidden"><div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Jumlah Poin</label><input type="number" id="jumlah-poin" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><p class="text-xs text-gray-500">Masukkan angka positif untuk menambah poin, negatif untuk mengurangi (penukaran).</p></div><div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Keterangan</label><input type="text" id="keterangan" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required></div><button type="submit" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Simpan Transaksi</button></form><div id="qr-reader" class="mt-4 hidden"></div></div>`; }
+        function getVoucherHTML() { return `<div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Buat Voucher Baru</h3><form id="form-voucher" class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" id="kode-voucher" placeholder="Kode Voucher (contoh: PROMOHEMAT)" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><select id="jenis-diskon" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><option value="persentase">Persentase (%)</option><option value="nominal">Nominal (Rp)</option></select><input type="number" id="nilai-diskon" placeholder="Nilai Diskon" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><input type="date" id="tanggal-kadaluarsa" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><button type="submit" class="md:col-span-2 bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700">Buat Voucher</button></form></div>`; }
+        function getExportHTML() { return `<div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Export Data ke CSV</h3><p class="text-gray-600 mb-4">Unduh semua data member atau transaksi dalam format file CSV.</p><div class="space-x-4"><button onclick="downloadCSV('DataMember')" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700"><i class="fas fa-download mr-2"></i> Export Data Member</button><button onclick="downloadCSV('DataTransaksi')" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700"><i class="fas fa-download mr-2"></i> Export Data Transaksi</button></div></div>`; }
+
+        // --- FUNGSI-FUNGSI TAMBAHAN ADMIN ---
+        function renderAnalyticsChart() { const ctx = document.getElementById('transactionChart'); if (!ctx) return; new Chart(ctx, { type: 'line', data: { labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'], datasets: [{ label: 'Jumlah Transaksi', data: [12, 19, 3, 5, 2, 8, 15], borderColor: 'rgb(251, 146, 60)', backgroundColor: 'rgba(251, 146, 60, 0.2)', tension: 0.1 }] }, options: { responsive: true, maintainAspectRatio: false } }); }
+        let selectedMemberId = null;
+        async function setupTransactionForm() {
+            const searchInput = document.getElementById('search-member-id');
+            searchInput.addEventListener('input', async (e) => {
+                const id = e.target.value; if (id.length > 3) {
+                    const res = await callAPI('getMemberData', { id_member: id }, 'member');
+                    const resultDiv = document.getElementById('member-search-result'); const transactionForm = document.getElementById('form-transaction');
+                    if (res.status === 'success') { selectedMemberId = res.data.id_member; resultDiv.innerHTML = `<p class="font-semibold">Ditemukan: ${res.data.nama} (${res.data.id_member})</p>`; resultDiv.classList.remove('hidden'); transactionForm.classList.remove('hidden'); }
+                    else { resultDiv.classList.add('hidden'); transactionForm.classList.add('hidden'); selectedMemberId = null; }
+                }
+            });
+            document.getElementById('form-transaction').addEventListener('submit', async (e) => {
+                e.preventDefault(); if (!selectedMemberId) { showNotification('Pilih member terlebih dahulu!', 'error'); return; }
+                const payload = { id_member: selectedMemberId, jumlah_poin: parseInt(document.getElementById('jumlah-poin').value), keterangan: document.getElementById('keterangan').value };
+                const res = await callAPI('addTransaction', payload, 'transaksi');
+                if (res.status === 'success') { showNotification(res.message, 'success'); e.target.reset(); document.getElementById('member-search-result').classList.add('hidden'); e.target.classList.add('hidden'); searchInput.value = ''; selectedMemberId = null; }
+                else { showNotification(res.message, 'error'); }
+            });
+        }
+        function setupVoucherForm() {
+            document.getElementById('form-voucher').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const payload = { kode: document.getElementById('kode-voucher').value, jenis: document.getElementById('jenis-diskon').value, nilai: document.getElementById('nilai-diskon').value, kadaluarsa: document.getElementById('tanggal-kadaluarsa').value };
+                const res = await callAPI('createVoucher', payload, 'voucher');
+                if (res.status === 'success') { showNotification(res.message, 'success'); e.target.reset(); }
+                else { showNotification(res.message, 'error'); }
+            });
+        }
+        async function downloadCSV(sheetName) {
+            const res = await callAPI('exportData', { sheetName }, 'transaksi');
+            if (res.status === 'success') {
+                const blob = new Blob([res.data.csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a'); const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url); link.setAttribute('download', res.data.fileName); link.style.visibility = 'hidden';
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+                showNotification(`File ${res.data.fileName} berhasil diunduh.`, 'success');
+            } else { showNotification(res.message, 'error'); }
+        }
+        function startQRScanner() {
+            const readerDiv = document.getElementById('qr-reader'); readerDiv.classList.remove('hidden');
+            const html5QrCode = new Html5Qrcode("qr-reader");
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    const cameraId = devices[0].id;
+                    html5QrCode.start(cameraId, { fps: 10, qrbox: { width: 250, height: 250 } }, (decodedText) => {
+                        document.getElementById('search-member-id').value = decodedText;
+                        html5QrCode.stop().then(() => { readerDiv.classList.add('hidden'); document.getElementById('search-member-id').dispatchEvent(new Event('input')); }).catch((err) => console.log(err));
+                    }, (errorMessage) => {}).catch((err) => { showNotification('Tidak dapat mengakses kamera.', 'error'); readerDiv.classList.add('hidden'); });
+                }
+            }).catch(err => { showNotification('Tidak ada kamera yang ditemukan.', 'error'); });
+        }
+
+        // --- FUNGSI PEMBANTU ---
+        async function loadMenu() {
+            const res = await callAPI('getMenu', {}, 'menu');
+            if (res.status === 'success') { state.menu = res.data; if (state.page === 'menu') showPage('menu'); }
+        }
+
     </script>
 </body>
 </html>
