@@ -4,180 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martabak Manis - Sistem Member</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GANTI TAILWIND CSS DENGAN VERSI PRODUCTION -->
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
-        /* Gaya Kustom untuk Sentuhan Akhir */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        
-        /* Animasi Fade In */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .page-content { animation: fadeIn 0.6s ease-out; }
-
-        /* Gaya untuk QR Scanner */
         #qr-reader { width: 100%; max-width: 500px; margin: auto; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);}
         #qr-reader video { border-radius: 12px; }
-
-        /* Gaya Notifikasi */
         .notification { position: fixed; top: 20px; right: 20px; padding: 16px 24px; border-radius: 12px; color: white; font-weight: 500; z-index: 1000; animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
         .notification.success { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .notification.error { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f97316, #ea580c); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #ea580c, #dc2626); }
-
-        /* Hover effect untuk card */
         .hover-lift { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
-
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar Navigasi -->
         <aside id="sidebar" class="relative flex flex-col flex-shrink-0 w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-            <!-- Logo Area -->
-            <div class="flex items-center justify-center h-20 shadow-lg">
-                <h1 class="text-2xl font-bold tracking-wide">
-                    <i class="fas fa-pizza-slice text-orange-500 mr-2"></i> MartabakKu
-                </h1>
-            </div>
-            <!-- Navigation -->
+            <div class="flex items-center justify-center h-20 shadow-lg"><h1 class="text-2xl font-bold tracking-wide"><i class="fas fa-pizza-slice text-orange-500 mr-2"></i> MartabakKu</h1></div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="#" data-page="beranda" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
-                    <i class="fas fa-home w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Beranda
-                </a>
-                <a href="#" data-page="menu" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
-                    <i class="fas fa-utensils w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Menu Kami
-                </a>
-                <a href="#" data-page="daftar" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
-                    <i class="fas fa-user-plus w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Daftar Member
-                </a>
-                <a href="#" data-page="login" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
-                    <i class="fas fa-sign-in-alt w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Login Member
-                </a>
-                <a href="#" data-page="loginAdmin" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
-                    <i class="fas fa-user-shield w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Login Admin
-                </a>
-                <a href="#" data-page="tentang" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group">
-                    <i class="fas fa-info-circle w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Tentang Kami
-                </a>
+                <a href="#" data-page="beranda" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group"><i class="fas fa-home w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Beranda</a>
+                <a href="#" data-page="menu" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group"><i class="fas fa-utensils w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Menu Kami</a>
+                <a href="#" data-page="daftar" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group"><i class="fas fa-user-plus w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Daftar Member</a>
+                <a href="#" data-page="login" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group"><i class="fas fa-sign-in-alt w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Login Member</a>
+                <a href="#" data-page="loginAdmin" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group"><i class="fas fa-user-shield w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Login Admin</a>
+                <a href="#" data-page="tentang" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-200 group"><i class="fas fa-info-circle w-5 mr-3 text-gray-400 group-hover:text-orange-400"></i> Tentang Kami</a>
             </nav>
         </aside>
-
-        <!-- Main Content -->
         <div class="flex flex-col flex-1 overflow-hidden">
-            <!-- Top Header -->
-            <header class="bg-white shadow-sm border-b border-gray-200">
-                <div class="px-6 py-4 flex justify-between items-center">
-                    <span class="text-gray-600">Selamat datang di sistem member MartabakKu</span>
-                    <span id="header-user-info" class="text-sm text-gray-500"></span>
-                </div>
-            </header>
-            
-            <!-- Page Content -->
-            <main id="content-area" class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
-                <!-- Konten akan dimuat di sini oleh JavaScript -->
-            </main>
+            <header class="bg-white shadow-sm border-b border-gray-200"><div class="px-6 py-4 flex justify-between items-center"><span class="text-gray-600">Selamat datang di sistem member MartabakKu</span><span id="header-user-info" class="text-sm text-gray-500"></span></div></header>
+            <main id="content-area" class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50"></main>
         </div>
     </div>
-
     <script>
         // --- KONFIGURASI URL SCRIPT ---
-        // URL Menu sekarang mengarah ke URL Member
         const URL_SCRIPT_MEMBER = 'https://script.google.com/macros/s/AKfycbwxqv4GQ8NLzRdYm45fo9DBsolS1IN2kCgRsEVD-inwfCYd77BHA6qpZ1UR7tKhs2IueA/exec';
         const URL_SCRIPT_TRANSAKSI = 'https://script.google.com/macros/s/AKfycbynLjiBEVcShk35S2AN2Pl-F7hx_WV33Djb51Bxo1ShYPBxMYJhGUIaTSN1OEncUAoB/exec';
-        const URL_SCRIPT_MENU = 'https://script.google.com/macros/s/AKfycbwxqv4GQ8NLzRdYm45fo9DBsolS1IN2kCgRsEVD-inwfCYd77BHA6qpZ1UR7tKhs2IueA/exec'; // SUDAH DIPERBAIKI
+        const URL_SCRIPT_MENU = URL_SCRIPT_MEMBER; // MENU SEKARANG DIAMBIL DARI SCRIPT MEMBER
         const URL_SCRIPT_VOUCHER = 'https://script.google.com/macros/s/AKfycbwp_7iZ8OQ28r9h57LGYoTEiZK_fNT2Xys4Eot5kMLdSiert4TzNR8zsLqlqvRiBunY/exec';
 
-        // --- STATE MANAJEMEN ---
         let state = { page: 'beranda', user: null, menu: [], analytics: null };
         const contentArea = document.getElementById('content-area');
         const navItems = document.querySelectorAll('.nav-item');
         const headerUserInfo = document.getElementById('header-user-info');
 
-        // --- FUNGSI UTAMA ---
-        document.addEventListener('DOMContentLoaded', () => {
-            setupNavigation();
-            showPage('beranda');
-            loadMenu();
-        });
+        document.addEventListener('DOMContentLoaded', () => { setupNavigation(); showPage('beranda'); loadMenu(); });
 
-        function setupNavigation() {
-            navItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const page = item.dataset.page;
-                    if (page === 'dashboardMember' && (!state.user || state.user.type !== 'member')) { showNotification('Silakan login terlebih dahulu.', 'error'); showPage('login'); return; }
-                    if (page === 'dashboardAdmin' && (!state.user || state.user.type !== 'admin')) { showNotification('Akses terbatas untuk admin.', 'error'); return; }
-                    showPage(page);
-                });
-            });
-        }
+        function setupNavigation() { navItems.forEach(item => { item.addEventListener('click', (e) => { e.preventDefault(); const page = item.dataset.page; if (page === 'dashboardMember' && (!state.user || state.user.type !== 'member')) { showNotification('Silakan login terlebih dahulu.', 'error'); showPage('login'); return; } if (page === 'dashboardAdmin' && (!state.user || state.user.type !== 'admin')) { showNotification('Akses terbatas untuk admin.', 'error'); return; } showPage(page); }); }); }
 
-        function showPage(pageName) {
-            state.page = pageName;
-            updateActiveNav(pageName);
-            updateHeader();
-            let html = '';
-            switch(pageName) {
-                case 'beranda': html = getBerandaHTML(); break;
-                case 'menu': html = getMenuHTML(); break;
-                case 'daftar': html = getDaftarHTML(); break;
-                case 'login': html = getLoginHTML(); break;
-                case 'loginAdmin': html = getLoginAdminHTML(); break;
-                case 'dashboardMember': html = getDashboardMemberHTML(); break;
-                case 'dashboardAdmin': html = getDashboardAdminHTML(); break;
-                case 'tentang': html = getTentangHTML(); break;
-                default: html = '<h1 class="text-4xl font-bold text-center text-gray-500 mt-20">Halaman tidak ditemukan</h1>';
-            }
-            contentArea.innerHTML = `<div class="page-content p-4 md:p-8 lg:p-12">${html}</div>`;
-            if (pageName === 'dashboardMember') renderMemberDashboard();
-            if (pageName === 'dashboardAdmin') renderAdminDashboard();
-        }
+        function showPage(pageName) { state.page = pageName; updateActiveNav(pageName); updateHeader(); let html = ''; switch(pageName) { case 'beranda': html = getBerandaHTML(); break; case 'menu': html = getMenuHTML(); break; case 'daftar': html = getDaftarHTML(); break; case 'login': html = getLoginHTML(); break; case 'loginAdmin': html = getLoginAdminHTML(); break; case 'dashboardMember': html = getDashboardMemberHTML(); break; case 'dashboardAdmin': html = getDashboardAdminHTML(); break; case 'tentang': html = getTentangHTML(); break; default: html = '<h1 class="text-4xl font-bold text-center text-gray-500 mt-20">Halaman tidak ditemukan</h1>'; } contentArea.innerHTML = `<div class="page-content p-4 md:p-8 lg:p-12">${html}</div>`; if (pageName === 'dashboardMember') renderMemberDashboard(); if (pageName === 'dashboardAdmin') renderAdminDashboard(); }
 
-        function updateActiveNav(pageName) {
-            navItems.forEach(item => {
-                item.classList.remove('bg-gray-700', 'text-white');
-                if (item.dataset.page === pageName) item.classList.add('bg-gray-700', 'text-white');
-            });
-        }
+        function updateActiveNav(pageName) { navItems.forEach(item => { item.classList.remove('bg-gray-700', 'text-white'); if (item.dataset.page === pageName) item.classList.add('bg-gray-700', 'text-white'); }); }
 
-        function updateHeader() {
-            if (state.user) {
-                headerUserInfo.textContent = `Login sebagai: ${state.user.data.nama || 'Admin'}`;
-            } else {
-                headerUserInfo.textContent = '';
-            }
-        }
+        function updateHeader() { if (state.user) { headerUserInfo.textContent = `Login sebagai: ${state.user.data.nama || 'Admin'}`; } else { headerUserInfo.textContent = ''; } }
 
-        // --- FUNGSI API ---
-        async function callAPI(action, payload = {}, endpoint) {
-            const scriptUrl = endpoint === 'member' ? URL_SCRIPT_MEMBER :
-                              endpoint === 'transaksi' ? URL_SCRIPT_TRANSAKSI :
-                              endpoint === 'menu' ? URL_SCRIPT_MENU :
-                              endpoint === 'voucher' ? URL_SCRIPT_VOUCHER : null;
-            
-            if (!scriptUrl) { showNotification('Endpoint API tidak valid.', 'error'); return { status: 'error', message: 'Invalid endpoint' }; }
-            try {
-                const response = await fetch(scriptUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, payload }) });
-                return await response.json();
-            } catch (error) { console.error("API call failed:", error); showNotification('Terjadi kesalahan koneksi. Coba lagi.', 'error'); return { status: 'error', message: 'Koneksi gagal' }; }
-        }
+        async function callAPI(action, payload = {}, endpoint) { const scriptUrl = endpoint === 'member' ? URL_SCRIPT_MEMBER : endpoint === 'transaksi' ? URL_SCRIPT_TRANSAKSI : endpoint === 'menu' ? URL_SCRIPT_MENU : endpoint === 'voucher' ? URL_SCRIPT_VOUCHER : null; if (!scriptUrl) { showNotification('Endpoint API tidak valid.', 'error'); return { status: 'error', message: 'Invalid endpoint' }; } try { const response = await fetch(scriptUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, payload }) }); return await response.json(); } catch (error) { console.error("API call failed:", error); showNotification('Terjadi kesalahan koneksi. Coba lagi.', 'error'); return { status: 'error', message: 'Koneksi gagal' }; } }
 
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div'); notification.className = `notification ${type}`; notification.textContent = message; document.body.appendChild(notification);
-            setTimeout(() => { notification.style.animation = 'slideIn 0.4s reverse'; setTimeout(() => notification.remove(), 400); }, 3000);
-        }
+        function showNotification(message, type = 'success') { const notification = document.createElement('div'); notification.className = `notification ${type}`; notification.textContent = message; document.body.appendChild(notification); setTimeout(() => { notification.style.animation = 'slideIn 0.4s reverse'; setTimeout(() => notification.remove(), 400); }, 3000); }
 
-        // --- HTML UNTUK SETIAP HALAMAN ---
         function getBerandaHTML() { return `<div class="text-center max-w-4xl mx-auto"><h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">Selamat Datang di MartabakKu</h1><p class="text-xl text-gray-600 mb-10 leading-relaxed">Nikmati martabak terenak dengan keuntungan eksklusif menjadi member kami. Dapatkan poin, penawaran spesial, dan banyak lagi!</p><div class="relative rounded-2xl overflow-hidden shadow-2xl hover-lift mb-10"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Martabak Lezat" class="w-full h-64 md:h-96 object-cover"><div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div></div><div class="flex flex-col sm:flex-row gap-4 justify-center"><button onclick="showPage('daftar')" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"><i class="fas fa-user-plus mr-2"></i> Daftar Member Sekarang</button><button onclick="showPage('login')" class="bg-white text-gray-800 border-2 border-gray-300 px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl hover:border-orange-500 transition-all duration-300"><i class="fas fa-sign-in-alt mr-2"></i> Login Member</button></div></div>`; }
         function getMenuHTML() { const menuItems = state.menu.map(item => `<div class="bg-white rounded-2xl shadow-lg overflow-hidden hover-lift"><img src="${item.gambar_url || 'https://via.placeholder.com/400x250.png?text=Menu'}" alt="${item.nama_menu}" class="w-full h-48 object-cover"><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-2">${item.nama_menu}</h3><p class="text-gray-600 mb-4">${item.deskripsi}</p><p class="text-2xl font-bold text-orange-600">Rp ${item.harga.toLocaleString('id-ID')}</p></div></div>`).join(''); return `<div class="max-w-7xl mx-auto"><h2 class="text-4xl font-bold text-center text-gray-800 mb-4">Menu Kami</h2><p class="text-center text-gray-600 mb-10">Pilih dari berbagai pilihan martabak favorit kami, dibuat dengan bahan-bahan terbaik.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">${menuItems || '<p class="col-span-full text-center text-gray-500">Menu sedang dimuat...</p>'}</div></div>`; }
         function getDaftarHTML() { return `<div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-800 mb-2">Bergabung Bersama Kami</h2><p class="text-gray-600 mb-6">Daftar dan mulai kumpulkan poinnya!</p><form id="form-daftar" class="space-y-5"><div><label class="block text-gray-700 text-sm font-semibold mb-2">Nama Lengkap</label><input type="text" id="nama" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">Email</label><input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">No. Telepon</label><input type="tel" id="no_telp" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><div><label class="block text-gray-700 text-sm font-semibold mb-2">Kata Sandi</label><input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition" required></div><button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 px-4 rounded-lg hover:from-orange-600 hover:to-orange-700 transition duration-300 shadow-lg">Daftar Sekarang</button></form><div id="qr-result" class="mt-8 text-center"></div></div>`; }
@@ -187,136 +80,31 @@
         function getDashboardAdminHTML() { return `<div class="max-w-7xl mx-auto"><h2 class="text-4xl font-bold text-gray-800 mb-8">Dashboard Admin</h2><div class="bg-white rounded-xl shadow-lg"><div class="border-b border-gray-200"><nav class="flex -mb-px"><button onclick="showAdminTab('analytics')" class="admin-tab py-4 px-6 text-sm font-semibold text-orange-600 border-b-2 border-orange-600 focus:outline-none">Analitik</button><button onclick="showAdminTab('transaction')" class="admin-tab py-4 px-6 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">Input Transaksi</button><button onclick="showAdminTab('voucher')" class="admin-tab py-4 px-6 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">Manajemen Voucher</button><button onclick="showAdminTab('export')" class="admin-tab py-4 px-6 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">Export Data</button></nav></div><div id="admin-tab-content" class="p-6"></div></div></div>`; }
         function getTentangHTML() { return `<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12"><h2 class="text-4xl font-bold text-gray-800 mb-6">Tentang MartabakKu</h2><div class="prose prose-lg text-gray-600"><p>MartabakKu adalah bisnis keluarga yang telah berdiri sejak tahun 2020. Kami berkomitmen untuk menyajikan martabak dengan rasa autentik dan bahan-bahan pilihan untuk memanjakan lidah Anda.</p><p>Visi kami adalah menjadi pilihan utama untuk pencinta martabak di kota Anda, dengan selalu mengutamakan kualitas, kebersihan, dan kepuasan pelanggan di atas segalanya.</p></div><div class="mt-10 p-6 bg-gray-50 rounded-xl"><h3 class="text-2xl font-bold text-gray-800 mb-4">Hubungi Kami</h3><div class="space-y-2 text-gray-600"><p><i class="fas fa-map-marker-alt mr-3 text-orange-500"></i> Jl. Contoh No. 123, Jakarta, Indonesia</p><p><i class="fas fa-phone mr-3 text-orange-500"></i> 0838-0192-8405</p><p><i class="fas fa-clock mr-3 text-orange-500"></i> Buka: 15:00 - 23:00 WIB</p></div></div></div>`; }
 
-        // --- EVENT LISTENER UNTUK SEMUA FORM ---
         document.addEventListener('submit', async (e) => {
-            if (e.target.id === 'form-daftar') {
-                e.preventDefault();
-                const payload = { nama: document.getElementById('nama').value, email: document.getElementById('email').value, no_telp: document.getElementById('no_telp').value, password: document.getElementById('password').value };
-                const result = await callAPI('registerMember', payload, 'member');
-                if (result.status === 'success') {
-                    showNotification(result.message, 'success');
-                    const qrDiv = document.getElementById('qr-result');
-                    qrDiv.innerHTML = `<p class="font-semibold mb-2">QR Code Member Anda:</p><img src="${result.data.qrCodeData}" alt="QR Code" class="mx-auto rounded-lg shadow-md"><p class="text-sm text-gray-600 mt-2">ID Member: ${result.data.id_member}</p><p class="text-sm text-gray-500">Simpan QR Code ini untuk ditunjukkan saat pembelian.</p>`;
-                    e.target.reset();
-                } else { showNotification(result.message, 'error'); }
-            }
-            if (e.target.id === 'form-login') {
-                e.preventDefault();
-                const payload = { email: document.getElementById('login-email').value, password: document.getElementById('login-password').value };
-                const result = await callAPI('loginMember', payload, 'member');
-                if (result.status === 'success') { state.user = { type: 'member', data: result.data }; showNotification(result.message, 'success'); showPage('dashboardMember'); }
-                else { showNotification(result.message, 'error'); }
-            }
-            if (e.target.id === 'form-login-admin') {
-                e.preventDefault();
-                const payload = { username: document.getElementById('admin-username').value, password: document.getElementById('admin-password').value };
-                const result = await callAPI('loginAdmin', payload, 'member');
-                if (result.status === 'success') { state.user = { type: 'admin', data: { nama: 'Admin' } }; showNotification(result.message, 'success'); showPage('dashboardAdmin'); }
-                else { showNotification(result.message, 'error'); }
-            }
+            if (e.target.id === 'form-daftar') { e.preventDefault(); const payload = { nama: document.getElementById('nama').value, email: document.getElementById('email').value, no_telp: document.getElementById('no_telp').value, password: document.getElementById('password').value }; const result = await callAPI('registerMember', payload, 'member'); if (result.status === 'success') { showNotification(result.message, 'success'); const qrDiv = document.getElementById('qr-result'); qrDiv.innerHTML = `<p class="font-semibold mb-2">QR Code Member Anda:</p><img src="${result.data.qrCodeData}" alt="QR Code" class="mx-auto rounded-lg shadow-md"><p class="text-sm text-gray-600 mt-2">ID Member: ${result.data.id_member}</p><p class="text-sm text-gray-500">Simpan QR Code ini untuk ditunjukkan saat pembelian.</p>`; e.target.reset(); } else { showNotification(result.message, 'error'); } }
+            if (e.target.id === 'form-login') { e.preventDefault(); const payload = { email: document.getElementById('login-email').value, password: document.getElementById('login-password').value }; const result = await callAPI('loginMember', payload, 'member'); if (result.status === 'success') { state.user = { type: 'member', data: result.data }; showNotification(result.message, 'success'); showPage('dashboardMember'); } else { showNotification(result.message, 'error'); } }
+            if (e.target.id === 'form-login-admin') { e.preventDefault(); const payload = { username: document.getElementById('admin-username').value, password: document.getElementById('admin-password').value }; const result = await callAPI('loginAdmin', payload, 'member'); if (result.status === 'success') { state.user = { type: 'admin', data: { nama: 'Admin' } }; showNotification(result.message, 'success'); showPage('dashboardAdmin'); } else { showNotification(result.message, 'error'); } }
         });
 
-        // --- FUNGSI RENDER DASHBOARD ---
-        async function renderMemberDashboard() {
-            if (!state.user || state.user.type !== 'member') return;
-            document.getElementById('member-name').textContent = state.user.data.nama;
-            document.getElementById('member-id').textContent = state.user.data.id_member;
-            const pointsRes = await callAPI('getMemberPoints', { id_member: state.user.data.id_member }, 'member');
-            if (pointsRes.status === 'success') { document.getElementById('member-points').textContent = pointsRes.data.totalPoints; }
-            const historyRes = await callAPI('getMemberTransactionHistory', { id_member: state.user.data.id_member }, 'member');
-            const historyDiv = document.getElementById('transaction-history');
-            if (historyRes.status === 'success' && historyRes.data.length > 0) {
-                const tableRows = historyRes.data.map(t => `<tr class="border-b"><td class="py-2 px-4">${new Date(t.timestamp).toLocaleString('id-ID')}</td><td class="py-2 px-4">${t.keterangan}</td><td class="py-2 px-4 font-semibold ${t.jumlah_poin > 0 ? 'text-green-600' : 'text-red-600'}">${t.jumlah_poin > 0 ? '+' : ''}${t.jumlah_poin}</td></tr>`).join('');
-                historyDiv.innerHTML = `<table class="min-w-full"><thead class="bg-gray-100"><tr><th class="py-2 px-4 text-left">Tanggal</th><th class="py-2 px-4 text-left">Keterangan</th><th class="py-2 px-4 text-left">Poin</th></tr></thead><tbody>${tableRows}</tbody></table>`;
-            } else { historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada riwayat transaksi.</p>'; }
-        }
+        async function renderMemberDashboard() { if (!state.user || state.user.type !== 'member') return; document.getElementById('member-name').textContent = state.user.data.nama; document.getElementById('member-id').textContent = state.user.data.id_member; const pointsRes = await callAPI('getMemberPoints', { id_member: state.user.data.id_member }, 'member'); if (pointsRes.status === 'success') { document.getElementById('member-points').textContent = pointsRes.data.totalPoints; } const historyRes = await callAPI('getMemberTransactionHistory', { id_member: state.user.data.id_member }, 'member'); const historyDiv = document.getElementById('transaction-history'); if (historyRes.status === 'success' && historyRes.data.length > 0) { const tableRows = historyRes.data.map(t => `<tr class="border-b"><td class="py-2 px-4">${new Date(t.timestamp).toLocaleString('id-ID')}</td><td class="py-2 px-4">${t.keterangan}</td><td class="py-2 px-4 font-semibold ${t.jumlah_poin > 0 ? 'text-green-600' : 'text-red-600'}">${t.jumlah_poin > 0 ? '+' : ''}${t.jumlah_poin}</td></tr>`).join(''); historyDiv.innerHTML = `<table class="min-w-full"><thead class="bg-gray-100"><tr><th class="py-2 px-4 text-left">Tanggal</th><th class="py-2 px-4 text-left">Keterangan</th><th class="py-2 px-4 text-left">Poin</th></tr></thead><tbody>${tableRows}</tbody></table>`; } else { historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada riwayat transaksi.</p>'; } }
 
-        async function renderAdminDashboard() {
-            if (!state.analytics) { const res = await callAPI('getAnalytics', {}, 'transaksi'); if (res.status === 'success') { state.analytics = res.data; } }
-            showAdminTab('analytics');
-        }
+        async function renderAdminDashboard() { if (!state.analytics) { const res = await callAPI('getAnalytics', {}, 'transaksi'); if (res.status === 'success') { state.analytics = res.data; } } showAdminTab('analytics'); }
 
-        function showAdminTab(tabName) {
-            const contentDiv = document.getElementById('admin-tab-content');
-            const tabs = document.querySelectorAll('.admin-tab');
-            tabs.forEach(tab => { tab.classList.remove('border-orange-500', 'text-orange-600'); tab.classList.add('border-transparent', 'text-gray-500'); });
-            event.target.classList.remove('border-transparent', 'text-gray-500'); event.target.classList.add('border-orange-500', 'text-orange-600');
-            let html = '';
-            switch(tabName) {
-                case 'analytics': html = getAnalyticsHTML(); contentDiv.innerHTML = html; renderAnalyticsChart(); break;
-                case 'transaction': html = getTransactionHTML(); contentDiv.innerHTML = html; setupTransactionForm(); break;
-                case 'voucher': html = getVoucherHTML(); contentDiv.innerHTML = html; setupVoucherForm(); break;
-                case 'export': html = getExportHTML(); contentDiv.innerHTML = html; break;
-            }
-        }
+        function showAdminTab(tabName) { const contentDiv = document.getElementById('admin-tab-content'); const tabs = document.querySelectorAll('.admin-tab'); tabs.forEach(tab => { tab.classList.remove('border-orange-500', 'text-orange-600'); tab.classList.add('border-transparent', 'text-gray-500'); }); event.target.classList.remove('border-transparent', 'text-gray-500'); event.target.classList.add('border-orange-500', 'text-orange-600'); let html = ''; switch(tabName) { case 'analytics': html = getAnalyticsHTML(); contentDiv.innerHTML = html; renderAnalyticsChart(); break; case 'transaction': html = getTransactionHTML(); contentDiv.innerHTML = html; setupTransactionForm(); break; case 'voucher': html = getVoucherHTML(); contentDiv.innerHTML = html; setupVoucherForm(); break; case 'export': html = getExportHTML(); contentDiv.innerHTML = html; break; } }
 
-        // --- HTML UNTUK TAB ADMIN ---
         function getAnalyticsHTML() { if (!state.analytics) return '<p>Memuat data...</p>'; return `<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-sm font-medium text-gray-500">Total Member</h3><p class="text-3xl font-bold text-gray-900">${state.analytics.totalMembers}</p></div><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-sm font-medium text-gray-500">Poin Dikeluarkan (Bulan Ini)</h3><p class="text-3xl font-bold text-orange-600">${state.analytics.totalPointsThisMonth}</p></div><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-sm font-medium text-gray-500">Top 5 Member</h3><ul class="mt-2 space-y-1">${state.analytics.topMembers.map(m => `<li class="text-sm text-gray-700">${m.id_member} - ${m.total_poin} poin</li>`).join('')}</ul></div></div><div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Grafik Transaksi (Contoh)</h3><canvas id="transactionChart" width="400" height="200"></canvas></div>`; }
         function getTransactionHTML() { return `<div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Input Transaksi Poin</h3><div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Cari Member (ID atau Scan QR)</label><div class="flex space-x-2"><input type="text" id="search-member-id" placeholder="Masukkan ID Member" class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500"><button type="button" onclick="startQRScanner()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"><i class="fas fa-qrcode"></i></button></div></div><div id="member-search-result" class="mb-4 p-4 bg-gray-100 rounded-lg hidden"></div><form id="form-transaction" class="hidden"><div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Jumlah Poin</label><input type="number" id="jumlah-poin" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><p class="text-xs text-gray-500">Masukkan angka positif untuk menambah poin, negatif untuk mengurangi (penukaran).</p></div><div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Keterangan</label><input type="text" id="keterangan" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required></div><button type="submit" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Simpan Transaksi</button></form><div id="qr-reader" class="mt-4 hidden"></div></div>`; }
         function getVoucherHTML() { return `<div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Buat Voucher Baru</h3><form id="form-voucher" class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" id="kode-voucher" placeholder="Kode Voucher (contoh: PROMOHEMAT)" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><select id="jenis-diskon" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><option value="persentase">Persentase (%)</option><option value="nominal">Nominal (Rp)</option></select><input type="number" id="nilai-diskon" placeholder="Nilai Diskon" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><input type="date" id="tanggal-kadaluarsa" class="px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-500" required><button type="submit" class="md:col-span-2 bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700">Buat Voucher</button></form></div>`; }
         function getExportHTML() { return `<div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-lg font-semibold text-gray-800 mb-4">Export Data ke CSV</h3><p class="text-gray-600 mb-4">Unduh semua data member atau transaksi dalam format file CSV.</p><div class="space-x-4"><button onclick="downloadCSV('DataMember')" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700"><i class="fas fa-download mr-2"></i> Export Data Member</button><button onclick="downloadCSV('DataTransaksi')" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700"><i class="fas fa-download mr-2"></i> Export Data Transaksi</button></div></div>`; }
 
-        // --- FUNGSI-FUNGSI TAMBAHAN ADMIN ---
         function renderAnalyticsChart() { const ctx = document.getElementById('transactionChart'); if (!ctx) return; new Chart(ctx, { type: 'line', data: { labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'], datasets: [{ label: 'Jumlah Transaksi', data: [12, 19, 3, 5, 2, 8, 15], borderColor: 'rgb(251, 146, 60)', backgroundColor: 'rgba(251, 146, 60, 0.2)', tension: 0.1 }] }, options: { responsive: true, maintainAspectRatio: false } }); }
         let selectedMemberId = null;
-        async function setupTransactionForm() {
-            const searchInput = document.getElementById('search-member-id');
-            searchInput.addEventListener('input', async (e) => {
-                const id = e.target.value; if (id.length > 3) {
-                    const res = await callAPI('getMemberData', { id_member: id }, 'member');
-                    const resultDiv = document.getElementById('member-search-result'); const transactionForm = document.getElementById('form-transaction');
-                    if (res.status === 'success') { selectedMemberId = res.data.id_member; resultDiv.innerHTML = `<p class="font-semibold">Ditemukan: ${res.data.nama} (${res.data.id_member})</p>`; resultDiv.classList.remove('hidden'); transactionForm.classList.remove('hidden'); }
-                    else { resultDiv.classList.add('hidden'); transactionForm.classList.add('hidden'); selectedMemberId = null; }
-                }
-            });
-            document.getElementById('form-transaction').addEventListener('submit', async (e) => {
-                e.preventDefault(); if (!selectedMemberId) { showNotification('Pilih member terlebih dahulu!', 'error'); return; }
-                const payload = { id_member: selectedMemberId, jumlah_poin: parseInt(document.getElementById('jumlah-poin').value), keterangan: document.getElementById('keterangan').value };
-                const res = await callAPI('addTransaction', payload, 'transaksi');
-                if (res.status === 'success') { showNotification(res.message, 'success'); e.target.reset(); document.getElementById('member-search-result').classList.add('hidden'); e.target.classList.add('hidden'); searchInput.value = ''; selectedMemberId = null; }
-                else { showNotification(res.message, 'error'); }
-            });
-        }
-        function setupVoucherForm() {
-            document.getElementById('form-voucher').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const payload = { kode: document.getElementById('kode-voucher').value, jenis: document.getElementById('jenis-diskon').value, nilai: document.getElementById('nilai-diskon').value, kadaluarsa: document.getElementById('tanggal-kadaluarsa').value };
-                const res = await callAPI('createVoucher', payload, 'voucher');
-                if (res.status === 'success') { showNotification(res.message, 'success'); e.target.reset(); }
-                else { showNotification(res.message, 'error'); }
-            });
-        }
-        async function downloadCSV(sheetName) {
-            const res = await callAPI('exportData', { sheetName }, 'transaksi');
-            if (res.status === 'success') {
-                const blob = new Blob([res.data.csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a'); const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url); link.setAttribute('download', res.data.fileName); link.style.visibility = 'hidden';
-                document.body.appendChild(link); link.click(); document.body.removeChild(link);
-                showNotification(`File ${res.data.fileName} berhasil diunduh.`, 'success');
-            } else { showNotification(res.message, 'error'); }
-        }
-        function startQRScanner() {
-            const readerDiv = document.getElementById('qr-reader'); readerDiv.classList.remove('hidden');
-            const html5QrCode = new Html5Qrcode("qr-reader");
-            Html5Qrcode.getCameras().then(devices => {
-                if (devices && devices.length) {
-                    const cameraId = devices[0].id;
-                    html5QrCode.start(cameraId, { fps: 10, qrbox: { width: 250, height: 250 } }, (decodedText) => {
-                        document.getElementById('search-member-id').value = decodedText;
-                        html5QrCode.stop().then(() => { readerDiv.classList.add('hidden'); document.getElementById('search-member-id').dispatchEvent(new Event('input')); }).catch((err) => console.log(err));
-                    }, (errorMessage) => {}).catch((err) => { showNotification('Tidak dapat mengakses kamera.', 'error'); readerDiv.classList.add('hidden'); });
-                }
-            }).catch(err => { showNotification('Tidak ada kamera yang ditemukan.', 'error'); });
-        }
+        async function setupTransactionForm() { const searchInput = document.getElementById('search-member-id'); searchInput.addEventListener('input', async (e) => { const id = e.target.value; if (id.length > 3) { const res = await callAPI('getMemberData', { id_member: id }, 'member'); const resultDiv = document.getElementById('member-search-result'); const transactionForm = document.getElementById('form-transaction'); if (res.status === 'success') { selectedMemberId = res.data.id_member; resultDiv.innerHTML = `<p class="font-semibold">Ditemukan: ${res.data.nama} (${res.data.id_member})</p>`; resultDiv.classList.remove('hidden'); transactionForm.classList.remove('hidden'); } else { resultDiv.classList.add('hidden'); transactionForm.classList.add('hidden'); selectedMemberId = null; } } }); document.getElementById('form-transaction').addEventListener('submit', async (e) => { e.preventDefault(); if (!selectedMemberId) { showNotification('Pilih member terlebih dahulu!', 'error'); return; } const payload = { id_member: selectedMemberId, jumlah_poin: parseInt(document.getElementById('jumlah-poin').value), keterangan: document.getElementById('keterangan').value }; const res = await callAPI('addTransaction', payload, 'transaksi'); if (res.status === 'success') { showNotification(res.message, 'success'); e.target.reset(); document.getElementById('member-search-result').classList.add('hidden'); e.target.classList.add('hidden'); searchInput.value = ''; selectedMemberId = null; } else { showNotification(res.message, 'error'); } }); }
+        function setupVoucherForm() { document.getElementById('form-voucher').addEventListener('submit', async (e) => { e.preventDefault(); const payload = { kode: document.getElementById('kode-voucher').value, jenis: document.getElementById('jenis-diskon').value, nilai: document.getElementById('nilai-diskon').value, kadaluarsa: document.getElementById('tanggal-kadaluarsa').value }; const res = await callAPI('createVoucher', payload, 'voucher'); if (res.status === 'success') { showNotification(res.message, 'success'); e.target.reset(); } else { showNotification(res.message, 'error'); } }); }
+        async function downloadCSV(sheetName) { const res = await callAPI('exportData', { sheetName }, 'transaksi'); if (res.status === 'success') { const blob = new Blob([res.data.csvContent], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement('a'); const url = URL.createObjectURL(blob); link.setAttribute('href', url); link.setAttribute('download', res.data.fileName); link.style.visibility = 'hidden'; document.body.appendChild(link); link.click(); document.body.removeChild(link); showNotification(`File ${res.data.fileName} berhasil diunduh.`, 'success'); } else { showNotification(res.message, 'error'); } }
+        function startQRScanner() { const readerDiv = document.getElementById('qr-reader'); readerDiv.classList.remove('hidden'); const html5QrCode = new Html5Qrcode("qr-reader"); Html5Qrcode.getCameras().then(devices => { if (devices && devices.length) { const cameraId = devices[0].id; html5QrCode.start(cameraId, { fps: 10, qrbox: { width: 250, height: 250 } }, (decodedText) => { document.getElementById('search-member-id').value = decodedText; html5QrCode.stop().then(() => { readerDiv.classList.add('hidden'); document.getElementById('search-member-id').dispatchEvent(new Event('input')); }).catch((err) => console.log(err)); }, (errorMessage) => {}).catch((err) => { showNotification('Tidak dapat mengakses kamera.', 'error'); readerDiv.classList.add('hidden'); }); } }).catch(err => { showNotification('Tidak ada kamera yang ditemukan.', 'error'); }); }
 
-        // --- FUNGSI PEMBANTU ---
-        async function loadMenu() {
-            // Panggil API ke endpoint 'member' karena logikanya sudah pindah ke sana
-            const res = await callAPI('getMenu', {}, 'member'); 
-            if (res.status === 'success') { state.menu = res.data; if (state.page === 'menu') showPage('menu'); }
-        }
-
+        async function loadMenu() { const res = await callAPI('getMenu', {}, 'member'); if (res.status === 'success') { state.menu = res.data; if (state.page === 'menu') showPage('menu'); } }
     </script>
 </body>
 </html>
